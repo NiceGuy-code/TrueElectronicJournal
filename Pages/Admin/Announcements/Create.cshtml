@@ -1,0 +1,40 @@
+@page "/Admin/Announcements/Create"
+@model Journal.Pages.Admin.Announcements.CreateModel
+@{
+    ViewData["Title"] = "Создание объявления";
+}
+
+<div class="card p-4 mx-auto" style="max-width: 640px;">
+    <h3 class="mb-3 text-center">Новое объявление</h3>
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Title" class="form-label">Заголовок</label>
+            <input asp-for="Input.Title" class="form-control" />
+            <span asp-validation-for="Input.Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Text" class="form-label">Текст</label>
+            <textarea asp-for="Input.Text" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="Input.Text" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.GroupId" class="form-label">Группа</label>
+            <select asp-for="Input.GroupId" class="form-select" asp-items="Model.GroupItems"></select>
+            <span asp-validation-for="Input.GroupId" class="text-danger"></span>
+            <div class="form-text">«Для всех» — без привязки к группе</div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Опубликовать</button>
+            <a asp-page="/Admin/Announcements/Index" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

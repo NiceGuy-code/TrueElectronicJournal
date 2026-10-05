@@ -1,0 +1,46 @@
+@page "/Admin/Index"
+@model Journal.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Администрирование";
+}
+
+<h3 class="m-0 mb-3">Администрирование</h3>
+
+<div class="row row-cols-2 row-cols-md-3 g-3">
+    <div class="col">
+        <a asp-page="/Admin/Users/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
+            <div class="fs-2">@Model.TotalUsers</div>
+            <div class="text-muted mt-1">Пользователи</div>
+        </a>
+    </div>
+    <div class="col">
+        <a asp-page="/Admin/Users/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
+            <div class="fs-2">@Model.Students</div>
+            <div class="text-muted mt-1">Студенты</div>
+        </a>
+    </div>
+    <div class="col">
+        <a asp-page="/Admin/Users/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
+            <div class="fs-2">@Model.Teachers</div>
+            <div class="text-muted mt-1">Учителя</div>
+        </a>
+    </div>
+    <div class="col">
+        <a asp-page="/Admin/Users/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
+            <div class="fs-2">@Model.Admins</div>
+            <div class="text-muted mt-1">Администраторы</div>
+        </a>
+    </div>
+    <div class="col">
+        <a asp-page="/Admin/Groups/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
+            <div class="fs-2">@Model.Groups</div>
+            <div class="text-muted mt-1">Группы</div>
+        </a>
+    </div>
+    <div class="col">
+        <a asp-page="/Admin/Announcements/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
+            <div class="fs-2">@Model.Announcements</div>
+            <div class="text-muted mt-1">Объявления</div>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+@page "/Admin/Announcements"
+@model Journal.Pages.Admin.Announcements.IndexModel
+@{
+    ViewData["Title"] = "Объявления";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Объявления</h3>
+    <a asp-page="/Admin/Announcements/Create" class="btn btn-primary">Создать</a>
+</div>
+
+<div class="card p-4">
+    <table class="table table-sm journal-table mb-0">
+        <thead>
+            <tr>
+                <th>Заголовок</th>
+                <th>Текст</th>
+                <th>Кому</th>
+                <th>Дата</th>
+                <th>Автор</th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.Items.Count == 0)
+        {
+            <tr>
+                <td colspan="5" class="text-muted">Объявлений нет</td>
+            </tr>
+        }
+        @foreach (var a in Model.Items)
+        {
+            <tr>
+                <td>@a.Title</td>
+                <td>@(a.Text.Length > 100 ? a.Text[..100] + "…" : a.Text)</td>
+                <td>@(a.GroupId == null ? "Все" : (a.Group?.Name ?? "—"))</td>
+                <td>@a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@(a.Author?.FullName ?? "—")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
