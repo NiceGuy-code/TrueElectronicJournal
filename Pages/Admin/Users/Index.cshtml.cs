@@ -1,5 +1,8 @@
 using Journal.Data;
+using Journal.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +12,12 @@ namespace Journal.Pages.Admin.Users;
 public class IndexModel : PageModel
 {
     private readonly AppDbContext _db;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public IndexModel(AppDbContext db)
+    public IndexModel(AppDbContext db, UserManager<ApplicationUser> userManager)
     {
         _db = db;
+        _userManager = userManager;
     }
 
     public List<UserRow> Rows { get; set; } = new();
@@ -34,6 +39,27 @@ public class IndexModel : PageModel
                 Role = r == null ? "" : r.Name ?? "",
                 GroupName = g == null ? "" : g.Name
             }).ToListAsync();
+    }
+
+    // Удаление: POST-форма из строки таблицы
+    public async Task<IActionResult> OnPostDeleteAsync(string id)
+    {
+        var me = await _userManager.GetUserAsync(User);
+        if (me?.Id == id)
+        {
+            TempData["Error"] = "Нельзя удалить самого себя";
+            return Redirect("/Admin/Users");
+        }
+
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+            return Redirect("/Admin/Users");
+
+        var result = await _userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+            TempData["Error"] = string.Join("; ", result.Errors.Select(e => e.Description));
+
+        return Redirect("/Admin/Users");
     }
 
     public class UserRow

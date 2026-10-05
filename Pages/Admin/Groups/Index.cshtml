@@ -1,0 +1,41 @@
+@page "/Admin/Groups"
+@model Journal.Pages.Admin.Groups.IndexModel
+@{
+    ViewData["Title"] = "Группы";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Группы</h3>
+    <a asp-page="/Admin/Groups/Create" class="btn btn-primary">Создать</a>
+</div>
+
+<div class="card p-4">
+    <table class="table table-sm journal-table mb-0">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Студентов</th>
+                <th class="text-end">Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.Rows.Count == 0)
+        {
+            <tr>
+                <td colspan="3" class="text-muted">Групп нет</td>
+            </tr>
+        }
+        @foreach (var g in Model.Rows)
+        {
+            <tr>
+                <td>@g.Name</td>
+                <td>@g.StudentsCount</td>
+                <td class="text-end">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Изменить</button>
+                    <button type="button" class="btn btn-danger btn-sm" disabled>Удалить</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

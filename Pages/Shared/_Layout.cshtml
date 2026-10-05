@@ -31,10 +31,10 @@
                             if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Admin/Users") ? "active" : "")" href="/Admin/Users">Пользователи</a>
+                                    <a class="nav-link text-dark @(IsActive("/Admin/Users") ? "active" : "")" asp-page="/Admin/Users/Index">Пользователи</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Admin/Groups") ? "active" : "")" asp-page="/Admin/Groups">Группы</a>
+                                    <a class="nav-link text-dark @(IsActive("/Admin/Groups") ? "active" : "")" asp-page="/Admin/Groups/Index">Группы</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark @(IsActive("/Admin/Announcements") ? "active" : "")" asp-page="/Admin/Announcements">Объявления</a>

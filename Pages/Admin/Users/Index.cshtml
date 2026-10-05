@@ -9,6 +9,11 @@
     <a asp-page="/Admin/Users/Create" class="btn btn-primary">Создать</a>
 </div>
 
+@if (TempData["Error"] is string err)
+{
+    <div class="text-danger mb-2">@err</div>
+}
+
 <div class="card p-4">
     <table class="table table-sm journal-table mb-0">
         <thead>
@@ -35,8 +40,10 @@
                 <td>@(string.IsNullOrEmpty(u.Role) ? "—" : u.Role)</td>
                 <td>@(string.IsNullOrEmpty(u.GroupName) ? "—" : u.GroupName)</td>
                 <td class="text-end">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Изменить</button>
-                    <button type="button" class="btn btn-danger btn-sm" disabled>Удалить</button>
+                    <a asp-page="/Admin/Users/Edit" asp-route-id="@u.Id" class="btn btn-outline-secondary btn-sm">Изменить</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@u.Id" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Удалить пользователя?')">Удалить</button>
+                    </form>
                 </td>
             </tr>
         }
