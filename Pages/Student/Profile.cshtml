@@ -1,0 +1,23 @@
+@page "/Student/Profile"
+@model Journal.Pages.Student.ProfileModel
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<h3 class="mb-3">Профиль</h3>
+
+<div class="card p-4" style="max-width: 520px;">
+    <div class="mb-3">
+        <label class="form-label">ФИО</label>
+        <input class="form-control form-control-plaintext" value="@Model.FullName" readonly />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input class="form-control form-control-plaintext" value="@Model.Email" readonly />
+    </div>
+    <div class="mb-0">
+        <label class="form-label">Группа</label>
+        <input class="form-control form-control-plaintext" value="@(Model.GroupName ?? "— не указана —")" readonly />
+    </div>
+    <div class="text-muted small mt-3">Смена пароля доступна только администратору.</div>
+</div>
