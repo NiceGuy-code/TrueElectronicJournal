@@ -8,24 +8,116 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
+  background: #f5f5f5;
+  color: #212529;
+  margin: 0;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* Контент-обёртка */
+.journal-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* Навбар */
+.navbar {
+  background: #fff;
+}
+
+.navbar .nav-link {
+  color: #212529;
+}
+
+.navbar .nav-link.active {
+  color: #212529;
+  border-bottom: 2px solid #212529;
+}
+
+/* Карточки: без теней */
+.card {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+/* Кнопка Primary — чёрная */
+.btn-primary {
+  --bs-btn-bg: #212529;
+  --bs-btn-border-color: #212529;
+  --bs-btn-hover-bg: #343a40;
+  --bs-btn-hover-border-color: #343a40;
+  --bs-btn-active-bg: #343a40;
+  --bs-btn-active-border-color: #343a40;
+  --bs-btn-disabled-bg: #6c757d;
+  --bs-btn-disabled-border-color: #6c757d;
+  border-radius: 4px;
+}
+
+/* Фокус без синего свечения */
+.btn:focus,
+.btn:active:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: none;
+}
+
+/* Оценки */
+.grade-5 {
+  font-weight: 700;
+  color: #212529;
+}
+
+.grade-4 {
+  color: #212529;
+}
+
+.grade-3 {
+  color: #6c757d;
+}
+
+.grade-2 {
+  color: #dc3545;
+}
+
+.grade-na {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.grade-absent {
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Карточка журнала */
+.journal-card {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: none;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+/* Таблица журнала */
+.journal-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.journal-table thead th {
+  background: #f8f9fa;
+  color: #212529;
+  font-weight: 500;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.journal-table tbody td {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.journal-table tbody tr:hover {
+  background: #f5f5f5;
 }

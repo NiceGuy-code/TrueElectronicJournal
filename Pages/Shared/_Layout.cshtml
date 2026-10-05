@@ -1,47 +1,98 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    var current = (string?)ViewContext.RouteData.Values["page"];
+    bool IsActive(string href) => current != null &&
+        (current.Equals(href, StringComparison.OrdinalIgnoreCase) ||
+         current.StartsWith(href + "/", StringComparison.OrdinalIgnoreCase));
+    var fullName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name;
+}
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Journal</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - Электронный журнал</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Journal.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm bg-white border-bottom">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Journal</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand text-dark" asp-page="/Index">Электронный журнал</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
+                    <ul class="navbar-nav me-auto">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Admin/Users") ? "active" : "")" asp-page="/Admin/Users">Пользователи</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Admin/Groups") ? "active" : "")" asp-page="/Admin/Groups">Группы</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Admin/Announcements") ? "active" : "")" asp-page="/Admin/Announcements">Объявления</a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Teacher"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Teacher/Index") ? "active" : "")" asp-page="/Teacher/Index">Мои занятия</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Teacher/Journal") ? "active" : "")" asp-page="/Teacher/Index">Журнал</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Student/Index") ? "active" : "")" asp-page="/Student/Index">Главная</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Student/Schedule") ? "active" : "")" asp-page="/Student/Schedule">Расписание</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Student/Grades") ? "active" : "")" asp-page="/Student/Grades">Оценки</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Student/Homeworks") ? "active" : "")" asp-page="/Student/Homeworks">ДЗ</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Student/Announcements") ? "active" : "")" asp-page="/Student/Announcements">Объявления</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Student/Profile") ? "active" : "")" asp-page="/Student/Profile">Профиль</a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(IsActive("/Account/Login") ? "active" : "")" asp-page="/Account/Login">Войти</a>
+                            </li>
+                        }
                     </ul>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <span class="navbar-text text-dark me-3">@fullName</span>
+                        <form method="post" asp-page="/Account/Logout">
+                            <button type="submit" class="btn btn-link nav-link">Выйти</button>
+                        </form>
+                    }
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Journal - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
+    <main class="journal-main">
+        @RenderBody()
+    </main>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

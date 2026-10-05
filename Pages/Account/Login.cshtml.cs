@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using Journal.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,18 +28,28 @@ public class LoginModel : PageModel
         if (!ModelState.IsValid)
             return Page();
 
-        var result = await _signInManager.PasswordSignInAsync(
-            Input.Email, Input.Password, isPersistent: false, lockoutOnFailure: false);
-
-        if (!result.Succeeded)
+        var user = await _userManager.FindByEmailAsync(Input.Email);
+        if (user == null)
         {
             ModelState.AddModelError("", "Неверный email или пароль");
             return Page();
         }
 
+        var check = await _signInManager.CheckPasswordSignInAsync(
+            user, Input.Password, lockoutOnFailure: false);
+
+        if (!check.Succeeded)
+        {
+            ModelState.AddModelError("", "Неверный email или пароль");
+            return Page();
+        }
+
+        // Кука с claim ФИО для навбара
+        await _signInManager.SignInWithClaimsAsync(user, isPersistent: false,
+            new[] { new Claim("FullName", user.FullName) });
+
         // Редирект по роли
-        var user = await _userManager.FindByEmailAsync(Input.Email);
-        var roles = user != null ? await _userManager.GetRolesAsync(user) : new List<string>();
+        var roles = await _userManager.GetRolesAsync(user);
 
         if (roles.Contains("Admin"))
             return RedirectToPage("/Admin/Index");
