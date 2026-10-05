@@ -1,0 +1,75 @@
+@page "/Teacher/Lesson/{id:int}"
+@model Journal.Pages.Teacher.LessonModel
+@{
+    ViewData["Title"] = "Занятие";
+}
+
+<h3 class="mb-3">Занятие: @Model.SubjectName — @Model.GroupName</h3>
+
+<div class="card p-4 mb-3">
+    <h5 class="mb-3">Информация</h5>
+    <div class="mb-1"><span class="text-muted">Дата:</span> @Model.DateFrom.ToLocalTime().ToString("dd.MM.yyyy")</div>
+    <div class="mb-1"><span class="text-muted">Время:</span> @Model.DateFrom.ToLocalTime().ToString("HH:mm") – @Model.DateTo.ToLocalTime().ToString("HH:mm")</div>
+    <div><span class="text-muted">Тема:</span> @(string.IsNullOrEmpty(Model.Topic) ? "—" : Model.Topic)</div>
+</div>
+
+<div class="card p-4">
+    <h5 class="mb-3">Посещаемость и оценки</h5>
+    <form method="post">
+        <table class="table table-sm journal-table">
+            <thead>
+                <tr>
+                    <th>ФИО</th>
+                    <th>Отсутствовал</th>
+                    <th>Оценка</th>
+                    <th>Н/Б</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model.Students)
+                {
+                    <tr>
+                        <td>@s.FullName</td>
+                        <td><input type="checkbox" class="form-check-input" name="AbsentIds" value="@s.Id" @(s.IsAbsent ? "checked" : "") /></td>
+                        <td>
+                            <select class="form-select form-select-sm" name="Grades[@s.Id]">
+                                @if (s.Grade == null)
+                                {
+                                    <option value="" selected>—</option>
+                                }
+                                else
+                                {
+                                    <option value="">—</option>
+                                }
+                                @for (var v = 2; v <= 5; v++)
+                                {
+                                    if (s.Grade == v)
+                                    {
+                                        <option value="@v" selected>@v</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@v">@v</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                        <td><input type="checkbox" class="form-check-input" name="NAIds" value="@s.Id" @(s.IsNA ? "checked" : "") /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (!Model.Students.Any())
+        {
+            <div class="text-muted">Студентов в группе нет</div>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        }
+    </form>
+</div>
+
+<div class="mt-3">
+    <a asp-page="/Teacher/Index" class="btn btn-outline-secondary">Назад к списку</a>
+</div>

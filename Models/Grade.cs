@@ -6,7 +6,8 @@ public enum GradeType
 {
     Lesson,
     Homework,
-    NA
+    NA,
+    Absent = 3
 }
 
 public class Grade

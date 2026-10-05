@@ -1,0 +1,39 @@
+@page "/Teacher/Index"
+@model Journal.Pages.Teacher.IndexModel
+@{
+    ViewData["Title"] = "Мои занятия";
+}
+
+<h3 class="mb-3">Мои занятия</h3>
+
+<div class="card p-4">
+    <table class="table table-sm journal-table mb-0">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Предмет</th>
+                <th>Группа</th>
+                <th>Тема</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.DateFrom.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                    <td>@item.DateFrom.ToLocalTime().ToString("HH:mm") – @item.DateTo.ToLocalTime().ToString("HH:mm")</td>
+                    <td>@item.SubjectName</td>
+                    <td>@item.GroupName</td>
+                    <td>@item.Topic</td>
+                    <td><a asp-page="/Teacher/Lesson" asp-route-id="@item.Id" class="btn-link">Открыть</a></td>
+                </tr>
+            }
+            @if (!Model.Items.Any())
+            {
+                <tr><td colspan="6" class="text-muted">Занятий нет</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

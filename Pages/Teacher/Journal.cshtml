@@ -1,0 +1,82 @@
+@page "/Teacher/Journal/{groupId:int?}"
+@model Journal.Pages.Teacher.JournalModel
+@{
+    ViewData["Title"] = "Журнал";
+}
+
+<h3 class="mb-3">@(Model.Groups.Count == 0 ? "Журнал" : "Журнал группы: " + Model.GroupName)</h3>
+
+@if (Model.Groups.Count == 0)
+{
+    <div class="card p-4"><div class="text-muted">У вас нет занятий</div></div>
+    return;
+}
+
+@if (Model.Groups.Count > 1)
+{
+    <div class="dropdown mb-3">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            @Model.GroupName
+        </button>
+        <ul class="dropdown-menu">
+            @foreach (var g in Model.Groups)
+            {
+                <li><a class="dropdown-item" asp-page="/Teacher/Journal" asp-route-groupId="@g.Id">@g.Name</a></li>
+            }
+        </ul>
+    </div>
+}
+
+@if (Model.Students.Count == 0 || Model.Lessons.Count == 0)
+{
+    <div class="card p-4">
+        <div class="text-muted">@(Model.Lessons.Count == 0 ? "Занятий нет" : "Студентов в группе нет")</div>
+    </div>
+    return;
+}
+
+<div class="table-responsive">
+    <table class="table table-sm journal-table">
+        <thead>
+            <tr>
+                <th>Студент</th>
+                @foreach (var l in Model.Lessons)
+                {
+                    <th>
+                        <a asp-page="/Teacher/Lesson" asp-route-id="@l.Id" class="btn-link" title="@l.Topic">@l.DateFrom.ToLocalTime().ToString("dd.MM")</a>
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model.Students)
+            {
+                <tr>
+                    <td>@s.FullName</td>
+                    @for (var i = 0; i < Model.Lessons.Count; i++)
+                    {
+                        var cell = s.Cells[i];
+                        <td>
+                            @if (cell.Grade != null)
+                            {
+                                <span class="grade-@cell.Grade">@cell.Grade</span>
+                            }
+                            else if (cell.IsAbsent)
+                            {
+                                <span class="grade-absent">н</span>
+                            }
+                            else if (cell.IsNA)
+                            {
+                                <span class="grade-na">н/б</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
