@@ -30,6 +30,7 @@ public class IndexModel : PageModel
             from ur in _db.UserRoles.Where(x => x.UserId == u.Id).DefaultIfEmpty()
             from r in _db.Roles.Where(x => x.Id == ur.RoleId).DefaultIfEmpty()
             from g in _db.Groups.Where(x => x.Id == u.GroupId).DefaultIfEmpty()
+            where !u.IsDeleted
             orderby u.FullName
             select new UserRow
             {
@@ -55,9 +56,13 @@ public class IndexModel : PageModel
         if (user == null)
             return Redirect("/Admin/Users");
 
-        var result = await _userManager.DeleteAsync(user);
-        if (!result.Succeeded)
-            TempData["Error"] = string.Join("; ", result.Errors.Select(e => e.Description));
+        // Мягкое удаление: роли снимаем, данные (занятия, оценки) сохраняем
+        var roles = await _userManager.GetRolesAsync(user);
+        if (roles.Count > 0)
+            await _userManager.RemoveFromRolesAsync(user, roles);
+
+        user.IsDeleted = true;
+        await _db.SaveChangesAsync();
 
         return Redirect("/Admin/Users");
     }

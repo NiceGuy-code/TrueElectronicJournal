@@ -44,6 +44,13 @@ public class LoginModel : PageModel
             return Page();
         }
 
+        // Мягкое удаление: кука ещё не выдана, SignOutAsync не нужен
+        if (user.IsDeleted)
+        {
+            ModelState.AddModelError("", "Учётная запись удалена. Обратитесь к администратору");
+            return Page();
+        }
+
         // Кука с claim ФИО для навбара
         await _signInManager.SignInWithClaimsAsync(user, isPersistent: false,
             new[] { new Claim("FullName", user.FullName) });

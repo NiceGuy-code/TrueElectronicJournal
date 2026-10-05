@@ -14,7 +14,9 @@ public class Lesson
     [Required]
     public string TeacherId { get; set; } = string.Empty;
 
-    public DateTime Date { get; set; }
+    public DateTime DateFrom { get; set; }
+
+    public DateTime DateTo { get; set; }
 
     [MaxLength(200)]
     public string? Topic { get; set; }

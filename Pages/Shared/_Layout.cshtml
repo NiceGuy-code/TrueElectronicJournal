@@ -43,6 +43,9 @@
                                     <a class="nav-link text-dark @(IsActive("/Admin/Subjects") ? "active" : "")" asp-page="/Admin/Subjects/Index">Предметы</a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Admin/Schedule") ? "active" : "")" asp-page="/Admin/Schedule/Index">Расписание</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-dark @(IsActive("/Admin/Announcements") ? "active" : "")" asp-page="/Admin/Announcements/Index">Объявления</a>
                                 </li>
                             }

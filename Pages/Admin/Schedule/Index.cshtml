@@ -1,0 +1,44 @@
+@page "/Admin/Schedule"
+@model Journal.Pages.Admin.Schedule.IndexModel
+@{
+    ViewData["Title"] = "Расписание";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Расписание</h3>
+    <a asp-page="/Admin/Schedule/Create" class="btn btn-primary">Создать</a>
+</div>
+
+<div class="card p-4">
+    <table class="table table-sm journal-table mb-0">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Предмет</th>
+                <th>Группа</th>
+                <th>Учитель</th>
+                <th>Тема</th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.Items.Count == 0)
+        {
+            <tr>
+                <td colspan="6" class="text-muted">Занятий нет</td>
+            </tr>
+        }
+        @foreach (var l in Model.Items)
+        {
+            <tr>
+                <td>@l.DateFrom.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                <td>@l.DateFrom.ToLocalTime().ToString("HH:mm") – @l.DateTo.ToLocalTime().ToString("HH:mm")</td>
+                <td>@l.SubjectName</td>
+                <td>@l.GroupName</td>
+                <td>@l.TeacherName</td>
+                <td>@(string.IsNullOrEmpty(l.Topic) ? "—" : l.Topic)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

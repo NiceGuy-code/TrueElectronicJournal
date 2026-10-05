@@ -1,7 +1,7 @@
 # Электронный журнал — курсовая (упрощённая версия)
 
 ## Стек
-- ASP.NET Core 8, Razor Pages
+- ASP.NET Core 9, Razor Pages
 - EF Core + SQL Server (LocalDB), строка подключения в appsettings.json
 - ASP.NET Core Identity для логина. Пароль БЕЗ хэширования (учебный проект) — заглушка PasswordHasher.
 - Bootstrap 5, минимум JS
@@ -15,7 +15,7 @@
 - ApplicationUser : IdentityUser + FullName, GroupId (nullable)
 - Group : Id, Name
 - Subject : Id, Name
-- Lesson : Id, SubjectId, GroupId, TeacherId, Date, Topic
+- Lesson : Id, SubjectId, GroupId, TeacherId, DateFrom, DateTo, Topic
 - Grade : Id, StudentId, LessonId, Value (int?), Type (Lesson | Homework | NA)
   - Type=NA → неаттестация, красный маркер, не идёт в средний балл
 - Homework : Id, LessonId, Description, FilePath, Deadline
@@ -38,14 +38,13 @@
 
 ### Admin
 - /Admin/Users — список, смена роли
-- /Admin/Groups — CRUD
+- /Admin/Groups — список + создание
 - /Admin/Announcements — создание
 - /Admin/Subjects — список + создание предметов (название)
-- /Admin/Schedule — CRUD занятий (предмет + группа + учитель + дата + тема)
+- /Admin/Schedule — список + создание занятий (предмет + группа + учитель + дата + тема)
 
 ### Account
 - /Account/Login
-- /Account/Register (присваивает роль Student)
 - /Account/Logout
 
 ## Файлы
@@ -135,7 +134,7 @@
 - Пользователей создаёт только Администратор на странице /Admin/Users/Create.
 - При создании админ указывает: ФИО, Email, Пароль, Роль (Student/Teacher/Admin), Группу (только для Student).
 - Админ может редактировать пользователя (сменить ФИО, роль, группу) и сбрасывать пароль.
-- Страницы /Account/Register не существует. Ссылки "Регистрация" в навбаре нет.
+- Страница регистрации не существует. Ссылки "Регистрация" в навбаре нет.
 - Страница "Забыли пароль?" не нужна.
 - Смена пароля — только через администратора (/Admin/Users/Edit). Пользователь сам пароль не меняет.
 
@@ -147,10 +146,3 @@
 - У пользователя только одна роль.
 - Настройки cookie-политики минимальные (учебный проект).
 ## Проверка build после каждой итерации
-## Сущности
-- Subject : Id, Name
-- Lesson : Id, SubjectId, GroupId, TeacherId, Date, Topic
-
-## Admin
-- /Admin/Subjects — CRUD предметов (только название)
-- /Admin/Schedule — CRUD занятий (предмет + группа + учитель + дата + тема)

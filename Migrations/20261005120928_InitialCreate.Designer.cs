@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Journal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261005113033_InitialCreate")]
+    [Migration("20261005120928_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -224,7 +224,10 @@ namespace Journal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("DateFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTo")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("GroupId")
