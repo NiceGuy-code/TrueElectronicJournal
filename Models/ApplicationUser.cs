@@ -11,5 +11,8 @@ public class ApplicationUser : IdentityUser
 
     public int? GroupId { get; set; }
 
+    // Мягкое удаление: запись остаётся, в списках и на входе не показывается
+    public bool IsDeleted { get; set; } = false;
+
     public Group? Group { get; set; }
 }

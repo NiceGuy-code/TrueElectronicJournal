@@ -19,11 +19,11 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         base.OnModelCreating(modelBuilder);
 
-        // Не удалять пользователя каскадом вместе с предметом/объявлением
-        modelBuilder.Entity<Subject>()
-            .HasOne(s => s.Teacher)
+        // Не удалять пользователя каскадом вместе с занятием/объявлением
+        modelBuilder.Entity<Lesson>()
+            .HasOne(l => l.Teacher)
             .WithMany()
-            .HasForeignKey(s => s.TeacherId)
+            .HasForeignKey(l => l.TeacherId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Announcement>()

@@ -10,6 +10,10 @@ public class Lesson
 
     public int GroupId { get; set; }
 
+    // Учитель привязан к занятию, а не к предмету
+    [Required]
+    public string TeacherId { get; set; } = string.Empty;
+
     public DateTime Date { get; set; }
 
     [MaxLength(200)]
@@ -18,6 +22,8 @@ public class Lesson
     public Subject? Subject { get; set; }
 
     public Group? Group { get; set; }
+
+    public ApplicationUser Teacher { get; set; } = null!;
 
     public ICollection<Grade> Grades { get; set; } = new List<Grade>();
 

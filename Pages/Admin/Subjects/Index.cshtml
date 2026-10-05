@@ -1,0 +1,34 @@
+@page "/Admin/Subjects"
+@model Journal.Pages.Admin.Subjects.IndexModel
+@{
+    ViewData["Title"] = "Предметы";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Предметы</h3>
+    <a asp-page="/Admin/Subjects/Create" class="btn btn-primary">Создать</a>
+</div>
+
+<div class="card p-4">
+    <table class="table table-sm journal-table mb-0">
+        <thead>
+            <tr>
+                <th>Название</th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.Items.Count == 0)
+        {
+            <tr>
+                <td colspan="1" class="text-muted">Предметов нет</td>
+            </tr>
+        }
+        @foreach (var s in Model.Items)
+        {
+            <tr>
+                <td>@s.Name</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

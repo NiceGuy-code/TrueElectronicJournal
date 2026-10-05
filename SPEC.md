@@ -14,8 +14,8 @@
 ## Сущности (минимум)
 - ApplicationUser : IdentityUser + FullName, GroupId (nullable)
 - Group : Id, Name
-- Subject : Id, Name, TeacherId
-- Lesson : Id, SubjectId, GroupId, Date, Topic
+- Subject : Id, Name
+- Lesson : Id, SubjectId, GroupId, TeacherId, Date, Topic
 - Grade : Id, StudentId, LessonId, Value (int?), Type (Lesson | Homework | NA)
   - Type=NA → неаттестация, красный маркер, не идёт в средний балл
 - Homework : Id, LessonId, Description, FilePath, Deadline
@@ -40,6 +40,8 @@
 - /Admin/Users — список, смена роли
 - /Admin/Groups — CRUD
 - /Admin/Announcements — создание
+- /Admin/Subjects — список + создание предметов (название)
+- /Admin/Schedule — CRUD занятий (предмет + группа + учитель + дата + тема)
 
 ### Account
 - /Account/Login
@@ -137,8 +139,18 @@
 - Страница "Забыли пароль?" не нужна.
 - Смена пароля — только через администратора (/Admin/Users/Edit). Пользователь сам пароль не меняет.
 
+## Soft delete
+- Удаление пользователей — мягкое (IsDeleted = true). Данные (занятия, оценки) сохраняются. Удалённые не показываются в списках и не могут войти.
+
 ## Известные ограничения (осознанные)
 - Админ может снять с себя роль Admin через Edit (не защищено).
 - У пользователя только одна роль.
 - Настройки cookie-политики минимальные (учебный проект).
 ## Проверка build после каждой итерации
+## Сущности
+- Subject : Id, Name
+- Lesson : Id, SubjectId, GroupId, TeacherId, Date, Topic
+
+## Admin
+- /Admin/Subjects — CRUD предметов (только название)
+- /Admin/Schedule — CRUD занятий (предмет + группа + учитель + дата + тема)

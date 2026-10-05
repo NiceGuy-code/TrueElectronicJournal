@@ -10,10 +10,5 @@ public class Subject
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
-    public string TeacherId { get; set; } = string.Empty;
-
-    public ApplicationUser? Teacher { get; set; }
-
     public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 }
