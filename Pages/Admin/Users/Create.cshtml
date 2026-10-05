@@ -1,0 +1,53 @@
+@page "/Admin/Users/Create"
+@model Journal.Pages.Admin.Users.CreateModel
+@{
+    ViewData["Title"] = "Создание пользователя";
+}
+
+<div class="card p-4 mx-auto" style="max-width: 520px;">
+    <h3 class="mb-3 text-center">Новый пользователь</h3>
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+        <div class="mb-3">
+            <label asp-for="Input.FullName" class="form-label">ФИО</label>
+            <input asp-for="Input.FullName" class="form-control" />
+            <span asp-validation-for="Input.FullName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Email" class="form-label">Email</label>
+            <input asp-for="Input.Email" class="form-control" placeholder="user@example.com" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Password" class="form-label">Пароль</label>
+            <input asp-for="Input.Password" class="form-control" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Role" class="form-label">Роль</label>
+            <select asp-for="Input.Role" class="form-select" asp-items="Model.RoleItems"></select>
+            <span asp-validation-for="Input.Role" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.GroupId" class="form-label">Группа</label>
+            <select asp-for="Input.GroupId" class="form-select" asp-items="Model.GroupItems"></select>
+            <span asp-validation-for="Input.GroupId" class="text-danger"></span>
+            <div class="form-text">Только для роли Student</div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            @* Маршрут задан в @page Index — путь пишем напрямую *@
+            <a href="/Admin/Users" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

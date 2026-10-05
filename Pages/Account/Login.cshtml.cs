@@ -48,6 +48,11 @@ public class LoginModel : PageModel
         await _signInManager.SignInWithClaimsAsync(user, isPersistent: false,
             new[] { new Claim("FullName", user.FullName) });
 
+        // Возврат на страницу, с которой пришли на вход
+        var returnUrl = Request.Query["ReturnUrl"].ToString();
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return LocalRedirect(returnUrl);
+
         // Редирект по роли
         var roles = await _userManager.GetRolesAsync(user);
 
