@@ -1,0 +1,28 @@
+@page "/Student/Index"
+@model Journal.Pages.Student.IndexModel
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<h3 class="mb-3">Главная</h3>
+
+<div class="row row-cols-1 row-cols-md-3 g-3">
+    <div class="col">
+        <div class="card p-4 h-100">
+            <div class="fs-2">@(Model.AverageGrade?.ToString("F2") ?? "—")</div>
+            <div class="text-muted small mt-1">@(Model.GradesCount > 0 ? $"{Model.GradesCount} оценок" : "оценок нет")</div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card p-4 h-100">
+            <div class="fs-2">@(Model.Attendance.HasValue ? $"{Model.Attendance.Value:F0}%" : "—")</div>
+            <div class="text-muted small mt-1">@(Model.TotalLessons > 0 ? $"{Model.TotalLessons - Math.Min(Model.Absences, Model.TotalLessons)} из {Model.TotalLessons} занятий" : "занятий нет")</div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card p-4 h-100">
+            <div class="fs-2 text-truncate" title="@(Model.GroupName ?? "—")">@(Model.GroupName ?? "—")</div>
+            <div class="text-muted small mt-1">текущая группа</div>
+        </div>
+    </div>
+</div>
