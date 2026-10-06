@@ -13,6 +13,28 @@
     <div><span class="text-muted">Тема:</span> @(string.IsNullOrEmpty(Model.Topic) ? "—" : Model.Topic)</div>
 </div>
 
+<div class="card p-4 mb-3">
+    <h5 class="mb-3">Домашнее задание</h5>
+    @if (Model.HasHomework)
+    {
+        <div style="white-space: pre-wrap;" class="mb-2">@Model.HomeworkDescription</div>
+        <div class="text-muted small mb-2">
+            Срок: @(Model.HomeworkDeadline?.ToLocalTime().ToString("dd.MM.yyyy") ?? "—")
+        </div>
+        <div class="text-muted small mb-3">
+            Сдано: @Model.SubmittedCount/@Model.TotalStudents
+        </div>
+        <a asp-page="/Teacher/Homeworks/Details" asp-route-id="@Model.HomeworkId"
+           class="btn btn-outline-secondary btn-sm">Открыть сданные работы</a>
+    }
+    else
+    {
+        <div class="text-muted mb-3">Не задано</div>
+        <a asp-page="/Teacher/Homeworks/Create"
+           class="btn btn-outline-secondary btn-sm">Создать ДЗ</a>
+    }
+</div>
+
 <div class="card p-4">
     <h5 class="mb-3">Посещаемость и оценки</h5>
     <form method="post">

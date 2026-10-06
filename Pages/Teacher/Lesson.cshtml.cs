@@ -38,6 +38,13 @@ public class LessonModel : PageModel
 
     public List<StudentRow> Students { get; set; } = new();
 
+    public bool HasHomework { get; set; } = false;
+    public int? HomeworkId { get; set; }
+    public string? HomeworkDescription { get; set; }
+    public DateTime? HomeworkDeadline { get; set; }
+    public int SubmittedCount { get; set; } = 0;
+    public int TotalStudents { get; set; } = 0;
+
     public async Task<IActionResult> OnGetAsync(int id)
     {
         var teacher = await _userManager.GetUserAsync(User);
@@ -61,6 +68,19 @@ public class LessonModel : PageModel
             .Where(u => u.GroupId == lesson.GroupId && !u.IsDeleted)
             .OrderBy(u => u.FullName)
             .ToListAsync();
+
+        TotalStudents = students.Count;
+
+        var hw = await _db.Homeworks.FirstOrDefaultAsync(h => h.LessonId == id);
+        if (hw != null)
+        {
+            HasHomework = true;
+            HomeworkId = hw.Id;
+            HomeworkDescription = hw.Description ?? "—";
+            HomeworkDeadline = hw.Deadline;
+            SubmittedCount = await _db.StudentHomeworks.CountAsync(
+                sh => sh.HomeworkId == hw.Id && !sh.Student!.IsDeleted);
+        }
 
         var grades = await _db.Grades
             .Where(g => g.LessonId == id &&
