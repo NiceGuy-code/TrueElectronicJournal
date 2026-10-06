@@ -50,6 +50,12 @@ public class CreateModel : PageModel
         if (!ModelState.IsValid)
             return Page();
 
+        if (Input.Deadline.HasValue && Input.Deadline.Value.Date < DateTime.UtcNow.Date)
+        {
+            ModelState.AddModelError("Input.Deadline", "Срок сдачи не может быть в прошлом");
+            return Page();
+        }
+
         var lesson = await _db.Lessons.FindAsync(Input.LessonId);
         if (lesson == null || lesson.TeacherId != teacher.Id)
         {
