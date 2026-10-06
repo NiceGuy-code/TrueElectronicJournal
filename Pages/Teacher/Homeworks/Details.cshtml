@@ -1,0 +1,98 @@
+@page "/Teacher/Homeworks/Details/{id:int}"
+@model Journal.Pages.Teacher.Homeworks.DetailsModel
+@{
+    ViewData["Title"] = "Домашнее задание";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Домашнее задание</h3>
+    <a asp-page="/Teacher/Homeworks/Index" class="btn btn-outline-secondary">Назад к списку</a>
+</div>
+
+<div class="card p-4 mb-3">
+    <h5 class="mb-3">Информация</h5>
+    <dl class="row mb-0">
+        <dt class="col-sm-3 text-muted">Занятие</dt>
+        <dd class="col-sm-9">@Model.Info.LessonDate.ToLocalTime().ToString("dd.MM.yyyy") — @Model.Info.SubjectName (@Model.Info.GroupName)</dd>
+        <dt class="col-sm-3 text-muted">Тема</dt>
+        <dd class="col-sm-9">@Model.Info.Topic</dd>
+        <dt class="col-sm-3 text-muted">Срок сдачи</dt>
+        <dd class="col-sm-9">@(Model.Info.Deadline?.ToLocalTime().ToString("dd.MM.yyyy") ?? "—")</dd>
+        <dt class="col-sm-3 text-muted">Описание</dt>
+        <dd class="col-sm-9" style="white-space: pre-wrap;">@Model.Info.Description</dd>
+        @if (Model.Info.FilePath != null)
+        {
+            <dt class="col-sm-3 text-muted">Файл задания</dt>
+            <dd class="col-sm-9"><a href="@Model.Info.FilePath">Скачать</a></dd>
+        }
+    </dl>
+</div>
+
+<div class="card p-4">
+    <h5 class="mb-3">Сданные работы</h5>
+
+    @if (!Model.Students.Any())
+    {
+        <div class="text-muted">Студентов в группе нет</div>
+        return;
+    }
+
+    <form method="post">
+        <table class="table table-sm journal-table mb-3">
+            <thead>
+                <tr>
+                    <th>Студент</th>
+                    <th>Сдал</th>
+                    <th>Оценка</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model.Students)
+                {
+                    <tr>
+                        <td>@s.FullName</td>
+                        <td>
+                            @if (s.FilePath != null)
+                            {
+                                <a href="@s.FilePath">файл</a>
+                                <span class="text-muted small">@s.SubmittedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Не сдал</span>
+                            }
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm" name="Grades[@s.Id]">
+                                @if (s.Grade == null)
+                                {
+                                    <option value="" selected>—</option>
+                                }
+                                else
+                                {
+                                    <option value="">—</option>
+                                }
+                                @for (var v = 2; v <= 5; v++)
+                                {
+                                    if (s.Grade == v)
+                                    {
+                                        <option value="@v" selected>@v</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@v">@v</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
