@@ -1,0 +1,71 @@
+@page "/Teacher/Homeworks"
+@model Journal.Pages.Teacher.Homeworks.IndexModel
+@{
+    ViewData["Title"] = "Домашние задания";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Домашние задания</h3>
+    <a asp-page="/Teacher/Homeworks/Create" class="btn btn-primary">Создать</a>
+</div>
+
+@if (Model.Groups.Count == 0)
+{
+    <div class="card p-4"><div class="text-muted">У вас нет занятий</div></div>
+    return;
+}
+
+@if (Model.Groups.Count > 1)
+{
+    <div class="dropdown mb-3">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            @Model.GroupName
+        </button>
+        <ul class="dropdown-menu">
+            @foreach (var g in Model.Groups)
+            {
+                <li><a class="dropdown-item" asp-page="/Teacher/Homeworks/Index" asp-route-groupId="@g.Id">@g.Name</a></li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="card p-4">
+    <table class="table table-sm journal-table mb-0">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Предмет</th>
+                <th>Задание</th>
+                <th>Сдано</th>
+                <th>Срок</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Items.Any())
+            {
+                <tr><td colspan="6" class="text-muted">Домашних заданий нет</td></tr>
+            }
+            else
+            {
+                foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.LessonDate.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td>@item.SubjectName</td>
+                        <td>
+                            @item.Description
+                            <div class="text-muted small">@item.LessonTopic</div>
+                        </td>
+                        <td>@item.SubmittedCount/@item.TotalStudents</td>
+                        <td>@(item.Deadline?.ToLocalTime().ToString("dd.MM.yyyy") ?? "—")</td>
+                        <td>
+                            <a asp-page="/Teacher/Homeworks/Details" asp-route-id="@item.Id" class="btn-link">Открыть</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

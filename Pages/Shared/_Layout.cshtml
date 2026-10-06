@@ -55,6 +55,9 @@
                                     <a class="nav-link text-dark @(IsActive("/Teacher/Index") ? "active" : "")" asp-page="/Teacher/Index">Мои занятия</a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link text-dark @(IsActive("/Teacher/Homeworks") ? "active" : "")" asp-page="/Teacher/Homeworks/Index">Домашние задания</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-dark @(IsActive("/Teacher/Journal") ? "active" : "")" asp-page="/Teacher/Journal">Журнал</a>
                                 </li>
                             }
