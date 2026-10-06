@@ -1,0 +1,46 @@
+@page "/Student/Schedule"
+@model Journal.Pages.Student.ScheduleModel
+@{
+    ViewData["Title"] = "Расписание";
+}
+
+<h3 class="mb-3">Расписание</h3>
+
+@if (Model.NoGroup)
+{
+    <div class="card p-4"><div class="text-muted">Вы не привязаны к группе</div></div>
+    return;
+}
+
+<div class="card p-4">
+    <table class="table table-sm journal-table mb-0">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Предмет</th>
+                <th>Учитель</th>
+                <th>Тема</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Items.Any())
+            {
+                <tr><td colspan="5" class="text-muted">Занятий нет</td></tr>
+            }
+            else
+            {
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.DateFrom.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td>@item.DateFrom.ToLocalTime().ToString("HH:mm") – @item.DateTo.ToLocalTime().ToString("HH:mm")</td>
+                        <td>@item.SubjectName</td>
+                        <td>@item.TeacherName</td>
+                        <td>@item.Topic</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
