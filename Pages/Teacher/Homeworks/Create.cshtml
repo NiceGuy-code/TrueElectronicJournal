@@ -1,0 +1,51 @@
+@page "/Teacher/Homeworks/Create"
+@model Journal.Pages.Teacher.Homeworks.CreateModel
+@{
+    ViewData["Title"] = "Новое ДЗ";
+}
+
+<h3 class="mb-3">Новое домашнее задание</h3>
+
+<div class="card p-4 mx-auto" style="max-width: 640px;">
+    <form method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+        <div class="mb-3">
+            <label asp-for="Input.LessonId" class="form-label">Занятие</label>
+            <select asp-for="Input.LessonId" asp-items="Model.LessonItems" class="form-select">
+                <option value="">— выберите —</option>
+            </select>
+            @if (!Model.LessonItems.Any())
+            {
+                <div class="form-text text-danger">Нет доступных занятий</div>
+            }
+            <span asp-validation-for="Input.LessonId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Description" class="form-label">Описание задания</label>
+            <textarea asp-for="Input.Description" rows="5" class="form-control"></textarea>
+            <span asp-validation-for="Input.Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Deadline" class="form-label">Срок сдачи</label>
+            <input asp-for="Input.Deadline" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.File" class="form-label">Файл задания</label>
+            <input asp-for="Input.File" type="file" class="form-control" />
+            <div class="form-text">Необязательно</div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-page="/Teacher/Homeworks/Index" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

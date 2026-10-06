@@ -49,7 +49,7 @@
 - /Account/Logout
 
 ## Файлы
-- wwwroot/uploads/{groupId}/{lessonId}/
+- Файлы ДЗ хранятся в wwwroot/uploads/homeworks/ (имя — GUID + расширение).
 - В БД хранить относительный путь
 
 ## Ограничения
