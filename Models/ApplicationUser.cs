@@ -15,4 +15,6 @@ public class ApplicationUser : IdentityUser
     public bool IsDeleted { get; set; } = false;
 
     public Group? Group { get; set; }
+
+    public ICollection<StudentHomework> SubmittedHomeworks { get; set; } = new List<StudentHomework>();
 }

@@ -13,6 +13,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Lesson> Lessons => Set<Lesson>();
     public DbSet<Grade> Grades => Set<Grade>();
     public DbSet<Homework> Homeworks => Set<Homework>();
+    public DbSet<StudentHomework> StudentHomeworks => Set<StudentHomework>();
     public DbSet<Announcement> Announcements => Set<Announcement>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,5 +32,15 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(a => a.AuthorId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Сданная работа: студента не удалять каскадом, ДЗ — удалять вместе со сдачами
+        modelBuilder.Entity<StudentHomework>()
+            .HasOne(s => s.Student).WithMany(u => u.SubmittedHomeworks)
+            .HasForeignKey(s => s.StudentId)
+            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<StudentHomework>()
+            .HasOne(s => s.Homework).WithMany(h => h.StudentHomeworks)
+            .HasForeignKey(s => s.HomeworkId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

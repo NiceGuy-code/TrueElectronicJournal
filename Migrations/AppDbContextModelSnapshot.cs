@@ -252,6 +252,36 @@ namespace Journal.Migrations
                     b.ToTable("Lessons");
                 });
 
+            modelBuilder.Entity("Journal.Models.StudentHomework", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HomeworkId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HomeworkId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentHomeworks");
+                });
+
             modelBuilder.Entity("Journal.Models.Subject", b =>
                 {
                     b.Property<int>("Id")
@@ -486,6 +516,25 @@ namespace Journal.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("Journal.Models.StudentHomework", b =>
+                {
+                    b.HasOne("Journal.Models.Homework", "Homework")
+                        .WithMany("StudentHomeworks")
+                        .HasForeignKey("HomeworkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Journal.Models.ApplicationUser", "Student")
+                        .WithMany("SubmittedHomeworks")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Homework");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -537,11 +586,21 @@ namespace Journal.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Journal.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("SubmittedHomeworks");
+                });
+
             modelBuilder.Entity("Journal.Models.Group", b =>
                 {
                     b.Navigation("Lessons");
 
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("Journal.Models.Homework", b =>
+                {
+                    b.Navigation("StudentHomeworks");
                 });
 
             modelBuilder.Entity("Journal.Models.Lesson", b =>

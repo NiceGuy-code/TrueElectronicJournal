@@ -16,4 +16,6 @@ public class Homework
     public DateTime? Deadline { get; set; }
 
     public Lesson? Lesson { get; set; }
+
+    public ICollection<StudentHomework> StudentHomeworks { get; set; } = new List<StudentHomework>();
 }

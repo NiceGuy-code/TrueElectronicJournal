@@ -19,6 +19,7 @@
 - Grade : Id, StudentId, LessonId, Value (int?), Type (Lesson | Homework | NA)
   - Type=NA → неаттестация, красный маркер, не идёт в средний балл
 - Homework : Id, LessonId, Description, FilePath, Deadline
+- StudentHomework : Id, HomeworkId, StudentId, FilePath, SubmittedAt (сданная работа; оценка — в Grade, Type=Homework)
 - Announcement : Id, Title, Text, CreatedAt, AuthorId, GroupId (nullable = для всех)
 
 ## Страницы (Razor Pages)
