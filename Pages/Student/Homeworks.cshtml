@@ -1,0 +1,83 @@
+@page "/Student/Homeworks"
+@model Journal.Pages.Student.HomeworksModel
+@{
+    ViewData["Title"] = "Домашние задания";
+}
+
+<h3 class="mb-3">Домашние задания</h3>
+
+@if (TempData["Error"] is string err)
+{
+    <div class="text-danger mb-2">@err</div>
+}
+@if (TempData["Success"] is string ok)
+{
+    <div class="text-success mb-2">@ok</div>
+}
+
+@if (Model.NoGroup)
+{
+    <div class="card p-4"><div class="text-muted">Вы не привязаны к группе</div></div>
+    return;
+}
+
+@if (!Model.Items.Any())
+{
+    <div class="card p-4"><div class="text-muted">Домашних заданий нет</div></div>
+    return;
+}
+
+@foreach (var hw in Model.Items)
+{
+    <div class="card p-4 mb-3">
+        <h5>@hw.LessonDate.ToLocalTime().ToString("dd.MM.yyyy") — @hw.SubjectName</h5>
+        <div class="text-muted small mb-2">Тема: @hw.Topic</div>
+
+        <div class="mb-3" style="white-space: pre-wrap;">@hw.Description</div>
+
+        <div class="mb-2">
+            <span class="text-muted">Срок сдачи:</span>
+            @(hw.Deadline?.ToLocalTime().ToString("dd.MM.yyyy") ?? "—")
+        </div>
+
+        @if (hw.FilePath != null)
+        {
+            <div class="mb-3"><a href="@hw.FilePath">Скачать задание</a></div>
+        }
+
+        <div class="mb-3">
+            @if (hw.MySubmittedAt != null)
+            {
+                <span class="text-success">Сдано</span>
+                <span class="text-muted small">— @hw.MySubmittedAt.Value.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span>
+            }
+            else if (hw.Deadline.HasValue && hw.Deadline.Value < DateTime.UtcNow)
+            {
+                <span class="text-danger">Просрочено</span>
+            }
+            else
+            {
+                <span class="text-muted">Не сдано</span>
+            }
+        </div>
+
+        @if (hw.MyGrade != null)
+        {
+            <div class="mb-3">Оценка: <span class="grade-@hw.MyGrade">@hw.MyGrade</span></div>
+        }
+
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="homeworkId" value="@hw.Id" />
+            <div class="d-flex gap-2">
+                <input type="file" name="File" class="form-control" />
+                <button type="submit" class="btn btn-primary">
+                    @(hw.MyFilePath != null ? "Заменить" : "Загрузить")
+                </button>
+            </div>
+            @if (hw.MyFilePath != null)
+            {
+                <div class="mt-2"><a href="@hw.MyFilePath">Мой файл</a></div>
+            }
+        </form>
+    </div>
+}
