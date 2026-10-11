@@ -61,9 +61,12 @@
                             {
                                 <span class="grade-@cell.Grade">@cell.Grade</span>
                             }
-                            else if (cell.IsAbsent)
+                            else if (!string.IsNullOrEmpty(cell.AttendanceCode))
                             {
-                                <span class="grade-absent">н</span>
+                                string cls = cell.AttendanceCode == "Н" ? "grade-na"
+                                    : cell.AttendanceCode == "УП" ? "grade-absent"
+                                    : "text-muted";
+                                <span class="@cls">@cell.AttendanceCode</span>
                             }
                             else if (cell.IsNA)
                             {

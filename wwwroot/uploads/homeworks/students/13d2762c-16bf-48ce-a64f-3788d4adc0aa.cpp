@@ -1,0 +1,1 @@
+//codeRows = income / rowPrice;

@@ -84,8 +84,18 @@ public class JournalModel : PageModel
             .Where(g => g.Type == GradeType.Lesson)
             .ToDictionary(g => $"{g.StudentId}_{g.LessonId}", g => g.Value);
 
-        var absentSet = grades
-            .Where(g => g.Type == GradeType.Absent)
+        var unexcusedSet = grades
+            .Where(g => g.Type == GradeType.Lesson && g.Attendance == AttendanceType.Unexcused)
+            .Select(g => $"{g.StudentId}_{g.LessonId}")
+            .ToHashSet();
+
+        var excusedSet = grades
+            .Where(g => g.Type == GradeType.Lesson && g.Attendance == AttendanceType.Excused)
+            .Select(g => $"{g.StudentId}_{g.LessonId}")
+            .ToHashSet();
+
+        var lateSet = grades
+            .Where(g => g.Type == GradeType.Lesson && g.Attendance == AttendanceType.Late)
             .Select(g => $"{g.StudentId}_{g.LessonId}")
             .ToHashSet();
 
@@ -104,7 +114,10 @@ public class JournalModel : PageModel
                 return new Cell
                 {
                     Grade = lessonGrades.TryGetValue(key, out var v) ? v : null,
-                    IsAbsent = absentSet.Contains(key),
+                    AttendanceCode = unexcusedSet.Contains(key) ? "Н"
+                        : excusedSet.Contains(key) ? "УП"
+                        : lateSet.Contains(key) ? "ОП"
+                        : "",
                     IsNA = naSet.Contains(key)
                 };
             }).ToList()
@@ -129,7 +142,7 @@ public class JournalModel : PageModel
     public class Cell
     {
         public int? Grade { get; set; }
-        public bool IsAbsent { get; set; }
+        public string AttendanceCode { get; set; } = string.Empty;
         public bool IsNA { get; set; }
     }
 

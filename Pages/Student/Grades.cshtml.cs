@@ -38,7 +38,7 @@ public class GradesModel : PageModel
         var lessons = await _db.Lessons
             .Where(l => l.GroupId == student.GroupId)
             .OrderByDescending(l => l.DateFrom)
-            .Select(l => new { l.Id, l.DateFrom, l.Topic, SubjectName = l.Subject.Name })
+            .Select(l => new { l.Id, l.DateFrom, l.Topic, SubjectName = l.Subject!.Name })
             .ToListAsync();
         var lessonIds = lessons.Select(l => l.Id).ToList();
 
@@ -52,7 +52,14 @@ public class GradesModel : PageModel
             .ToDictionary(g => g.LessonId, g => g.Value);
         var naSet = grades.Where(g => g.Type == GradeType.NA)
             .Select(g => g.LessonId).ToHashSet();
-        var absentSet = grades.Where(g => g.Type == GradeType.Absent)
+        var unexcusedSet = grades.Where(g => g.Type == GradeType.Lesson
+                && g.Attendance == AttendanceType.Unexcused)
+            .Select(g => g.LessonId).ToHashSet();
+        var excusedSet = grades.Where(g => g.Type == GradeType.Lesson
+                && g.Attendance == AttendanceType.Excused)
+            .Select(g => g.LessonId).ToHashSet();
+        var lateSet = grades.Where(g => g.Type == GradeType.Lesson
+                && g.Attendance == AttendanceType.Late)
             .Select(g => g.LessonId).ToHashSet();
 
         Items = lessons.Select(l => new Row
@@ -62,7 +69,9 @@ public class GradesModel : PageModel
             Topic = l.Topic ?? "—",
             Grade = gradeValues.TryGetValue(l.Id, out var v) ? v : null,
             Status = naSet.Contains(l.Id) ? "н/б"
-                   : absentSet.Contains(l.Id) ? "н"
+                   : unexcusedSet.Contains(l.Id) ? "Н"
+                   : excusedSet.Contains(l.Id) ? "УП"
+                   : lateSet.Contains(l.Id) ? "ОП"
                    : ""
         }).ToList();
 

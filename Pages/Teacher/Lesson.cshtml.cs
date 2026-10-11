@@ -26,8 +26,9 @@ public class LessonModel : PageModel
     public DateTime DateTo { get; set; }
     public string? Topic { get; set; }
 
+    // Ключ — StudentId, значение — "Excused"/"Unexcused"/"Late" или "" (пустая строка безопасна при биндинге)
     [BindProperty]
-    public List<string> AbsentIds { get; set; } = new();
+    public Dictionary<string, string> Attendance { get; set; } = new();
 
     // Ключ — StudentId, значение — "2".."5" или "" (пустая строка безопасна при биндинге)
     [BindProperty]
@@ -84,10 +85,17 @@ public class LessonModel : PageModel
 
         var grades = await _db.Grades
             .Where(g => g.LessonId == id &&
-                (g.Type == GradeType.Lesson || g.Type == GradeType.NA || g.Type == GradeType.Absent))
+                (g.Type == GradeType.Lesson || g.Type == GradeType.NA))
             .ToListAsync();
 
-        var absentIds = grades.Where(g => g.Type == GradeType.Absent)
+        var unexcusedIds = grades.Where(g => g.Type == GradeType.Lesson
+                && g.Attendance == AttendanceType.Unexcused)
+            .Select(g => g.StudentId).ToHashSet();
+        var excusedIds = grades.Where(g => g.Type == GradeType.Lesson
+                && g.Attendance == AttendanceType.Excused)
+            .Select(g => g.StudentId).ToHashSet();
+        var lateIds = grades.Where(g => g.Type == GradeType.Lesson
+                && g.Attendance == AttendanceType.Late)
             .Select(g => g.StudentId).ToHashSet();
         var naIds = grades.Where(g => g.Type == GradeType.NA)
             .Select(g => g.StudentId).ToHashSet();
@@ -98,7 +106,10 @@ public class LessonModel : PageModel
         {
             Id = s.Id,
             FullName = s.FullName,
-            IsAbsent = absentIds.Contains(s.Id),
+            AttendanceCode = unexcusedIds.Contains(s.Id) ? "Н"
+                : excusedIds.Contains(s.Id) ? "УП"
+                : lateIds.Contains(s.Id) ? "ОП"
+                : "",
             IsNA = naIds.Contains(s.Id),
             Grade = lessonValues.TryGetValue(s.Id, out var v) ? v : null
         }).ToList();
@@ -119,7 +130,7 @@ public class LessonModel : PageModel
         // Снимаем прошлые отметки занятия (Homework не трогаем), затем ставим заново
         var oldGrades = await _db.Grades
             .Where(g => g.LessonId == id &&
-                (g.Type == GradeType.Lesson || g.Type == GradeType.NA || g.Type == GradeType.Absent))
+                (g.Type == GradeType.Lesson || g.Type == GradeType.NA))
             .ToListAsync();
         _db.Grades.RemoveRange(oldGrades);
 
@@ -128,38 +139,41 @@ public class LessonModel : PageModel
             .Select(u => u.Id)
             .ToListAsync();
 
-        // Приоритет: Absent > NA > оценка
+        // Приоритет: Н/Б > посещение/оценка
         foreach (var sid in validIds)
         {
-            if (AbsentIds.Contains(sid))
+            int? val = null;
+            if (Grades.TryGetValue(sid, out var raw) &&
+                int.TryParse(raw, out var parsed) && parsed is >= 2 and <= 5)
             {
-                _db.Grades.Add(new Grade
-                {
-                    LessonId = id,
-                    StudentId = sid,
-                    Type = GradeType.Absent,
-                    Value = null
-                });
+                val = parsed;
             }
-            else if (NAIds.Contains(sid))
+
+            Attendance.TryGetValue(sid, out var attRaw);
+            var att = Enum.TryParse<AttendanceType>(attRaw, out var attVal)
+                ? (AttendanceType?)attVal
+                : null;
+
+            if (NAIds.Contains(sid))
             {
                 _db.Grades.Add(new Grade
                 {
                     LessonId = id,
                     StudentId = sid,
                     Type = GradeType.NA,
-                    Value = null
+                    Value = null,
+                    Attendance = null
                 });
             }
-            else if (Grades.TryGetValue(sid, out var raw) &&
-                     int.TryParse(raw, out var val) && val is >= 2 and <= 5)
+            else if (val != null || (att != null && att != AttendanceType.Present))
             {
                 _db.Grades.Add(new Grade
                 {
                     LessonId = id,
                     StudentId = sid,
                     Type = GradeType.Lesson,
-                    Value = val
+                    Value = val,
+                    Attendance = att ?? AttendanceType.Present
                 });
             }
         }
@@ -172,7 +186,7 @@ public class LessonModel : PageModel
     {
         public string Id { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
-        public bool IsAbsent { get; set; }
+        public string AttendanceCode { get; set; } = string.Empty;
         public bool IsNA { get; set; }
         public int? Grade { get; set; }
     }

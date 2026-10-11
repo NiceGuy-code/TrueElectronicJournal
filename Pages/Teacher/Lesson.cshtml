@@ -42,9 +42,9 @@
             <thead>
                 <tr>
                     <th>ФИО</th>
-                    <th>Отсутствовал</th>
-                    <th>Оценка</th>
+                    <th>Посещение</th>
                     <th>Н/Б</th>
+                    <th>Оценка</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,7 +52,43 @@
                 {
                     <tr>
                         <td>@s.FullName</td>
-                        <td><input type="checkbox" class="form-check-input" name="AbsentIds" value="@s.Id" @(s.IsAbsent ? "checked" : "") /></td>
+                        <td>
+                            <select class="form-select form-select-sm" name="Attendance[@s.Id]">
+                                @if (string.IsNullOrEmpty(s.AttendanceCode))
+                                {
+                                    <option value="" selected>—</option>
+                                }
+                                else
+                                {
+                                    <option value="">—</option>
+                                }
+                                @if (s.AttendanceCode == "УП")
+                                {
+                                    <option value="Excused" selected>УП</option>
+                                }
+                                else
+                                {
+                                    <option value="Excused">УП</option>
+                                }
+                                @if (s.AttendanceCode == "Н")
+                                {
+                                    <option value="Unexcused" selected>Н</option>
+                                }
+                                else
+                                {
+                                    <option value="Unexcused">Н</option>
+                                }
+                                @if (s.AttendanceCode == "ОП")
+                                {
+                                    <option value="Late" selected>ОП</option>
+                                }
+                                else
+                                {
+                                    <option value="Late">ОП</option>
+                                }
+                            </select>
+                        </td>
+                        <td><input type="checkbox" class="form-check-input" name="NAIds" value="@s.Id" @(s.IsNA ? "checked" : "") /></td>
                         <td>
                             <select class="form-select form-select-sm" name="Grades[@s.Id]">
                                 @if (s.Grade == null)
@@ -76,7 +112,6 @@
                                 }
                             </select>
                         </td>
-                        <td><input type="checkbox" class="form-check-input" name="NAIds" value="@s.Id" @(s.IsNA ? "checked" : "") /></td>
                     </tr>
                 }
             </tbody>

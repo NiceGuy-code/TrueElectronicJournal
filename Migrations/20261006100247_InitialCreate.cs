@@ -263,7 +263,8 @@ namespace Journal.Migrations
                     StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LessonId = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<int>(type: "int", nullable: true),
-                    Type = table.Column<int>(type: "int", nullable: false)
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Attendance = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -300,6 +301,34 @@ namespace Journal.Migrations
                         name: "FK_Homeworks_Lessons_LessonId",
                         column: x => x.LessonId,
                         principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentHomeworks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    HomeworkId = table.Column<int>(type: "int", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubmittedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentHomeworks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentHomeworks_AspNetUsers_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentHomeworks_Homeworks_HomeworkId",
+                        column: x => x.HomeworkId,
+                        principalTable: "Homeworks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -387,6 +416,16 @@ namespace Journal.Migrations
                 name: "IX_Lessons_TeacherId",
                 table: "Lessons",
                 column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentHomeworks_HomeworkId",
+                table: "StudentHomeworks",
+                column: "HomeworkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentHomeworks_StudentId",
+                table: "StudentHomeworks",
+                column: "StudentId");
         }
 
         /// <inheritdoc />
@@ -414,10 +453,13 @@ namespace Journal.Migrations
                 name: "Grades");
 
             migrationBuilder.DropTable(
-                name: "Homeworks");
+                name: "StudentHomeworks");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Homeworks");
 
             migrationBuilder.DropTable(
                 name: "Lessons");

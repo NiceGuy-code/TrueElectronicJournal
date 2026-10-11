@@ -43,7 +43,7 @@ public class ScheduleModel : PageModel
                 Id = l.Id,
                 DateFrom = l.DateFrom,
                 DateTo = l.DateTo,
-                SubjectName = l.Subject.Name,
+                SubjectName = l.Subject!.Name,
                 TeacherName = l.Teacher.FullName,
                 Topic = l.Topic ?? "—"
             }).ToListAsync();

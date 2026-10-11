@@ -27,7 +27,7 @@ public class IndexModel : PageModel
     public int TotalLessons { get; set; }
     public int Absences { get; set; }
 
-    // Средний балл (без Н/Б) и посещаемость (% занятий без Н/Б)
+    // Средний балл (без Н/Б) и посещаемость (% занятий без прогулов)
     public async Task<IActionResult> OnGetAsync()
     {
         var student = await _userManager.GetUserAsync(User);
@@ -49,8 +49,11 @@ public class IndexModel : PageModel
                 && (g.Type == GradeType.Lesson || g.Type == GradeType.Homework)
                 && g.Value != null);
 
+        // Прогулы (Н) — единственное, что уменьшает посещаемость; УП/ОП/н/б не влияют
         Absences = await _db.Grades
-            .CountAsync(g => g.StudentId == student.Id && g.Type == GradeType.NA);
+            .CountAsync(g => g.StudentId == student.Id
+                && g.Type == GradeType.Lesson
+                && g.Attendance == AttendanceType.Unexcused);
 
         TotalLessons = student.GroupId == null
             ? 0

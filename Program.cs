@@ -47,13 +47,18 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Раздача wwwroot, включая файлы, созданные в рантайме (загрузки ДЗ)
+app.UseStaticFiles(new StaticFileOptions
+{
+    ServeUnknownFileTypes = true,
+    DefaultContentType = "application/octet-stream"
+});
+
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
+app.MapRazorPages();
 
 app.Run();

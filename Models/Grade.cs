@@ -6,8 +6,15 @@ public enum GradeType
 {
     Lesson,
     Homework,
-    NA,
-    Absent = 3
+    NA
+}
+
+public enum AttendanceType
+{
+    Present,
+    Excused,
+    Unexcused,
+    Late
 }
 
 public class Grade
@@ -22,6 +29,8 @@ public class Grade
     public int? Value { get; set; }
 
     public GradeType Type { get; set; } = GradeType.Lesson;
+
+    public AttendanceType? Attendance { get; set; }
 
     public ApplicationUser? Student { get; set; }
 

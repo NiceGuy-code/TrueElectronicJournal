@@ -51,9 +51,17 @@
                             {
                                 <span class="grade-na">н/б</span>
                             }
-                            else if (item.Status == "н")
+                            else if (item.Status == "Н")
                             {
-                                <span class="grade-absent">н</span>
+                                <span class="grade-na">Н</span>
+                            }
+                            else if (item.Status == "УП")
+                            {
+                                <span class="grade-absent">УП</span>
+                            }
+                            else if (item.Status == "ОП")
+                            {
+                                <span class="text-muted">ОП</span>
                             }
                         </td>
                     </tr>
