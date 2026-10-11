@@ -22,23 +22,39 @@ public class IndexModel : PageModel
 
     public List<UserRow> Rows { get; set; } = new();
 
+    public string? SelectedRole { get; set; }
+    public int? SelectedGroupId { get; set; }
+    public List<Group> Groups { get; set; } = new();
+    public List<string> Roles { get; set; } = new() { "Student", "Teacher", "Admin" };
+    public bool HasFilter => !string.IsNullOrEmpty(SelectedRole) || SelectedGroupId.HasValue;
+
     // Один запрос с левыми JOIN — без цикла и без GetRolesAsync
-    public async Task OnGetAsync()
+    public async Task OnGetAsync(string? SelectedRole, int? SelectedGroupId)
     {
-        Rows = await (
-            from u in _db.Users
-            from ur in _db.UserRoles.Where(x => x.UserId == u.Id).DefaultIfEmpty()
-            from r in _db.Roles.Where(x => x.Id == ur.RoleId).DefaultIfEmpty()
-            from g in _db.Groups.Where(x => x.Id == u.GroupId).DefaultIfEmpty()
-            where !u.IsDeleted
-            orderby u.FullName
-            select new UserRow
+        this.SelectedRole = SelectedRole;
+        this.SelectedGroupId = SelectedGroupId;
+        Groups = await _db.Groups.OrderBy(g => g.Name).ToListAsync();
+
+        var query = from u in _db.Users
+                    from ur in _db.UserRoles.Where(x => x.UserId == u.Id).DefaultIfEmpty()
+                    from r in _db.Roles.Where(x => x.Id == ur.RoleId).DefaultIfEmpty()
+                    from g in _db.Groups.Where(x => x.Id == u.GroupId).DefaultIfEmpty()
+                    where !u.IsDeleted
+                    select new { u, r, g };
+
+        if (!string.IsNullOrEmpty(SelectedRole))
+            query = query.Where(x => x.r!.Name == SelectedRole);
+        if (SelectedGroupId.HasValue)
+            query = query.Where(x => x.u.GroupId == SelectedGroupId.Value);
+
+        Rows = await query.OrderBy(x => x.u.FullName)
+            .Select(x => new UserRow
             {
-                Id = u.Id,
-                FullName = u.FullName,
-                Email = u.Email ?? "",
-                Role = r == null ? "" : r.Name ?? "",
-                GroupName = g == null ? "" : g.Name
+                Id = x.u.Id,
+                FullName = x.u.FullName,
+                Email = x.u.Email!,
+                Role = x.r != null ? x.r.Name! : "—",
+                GroupName = x.g != null ? x.g.Name : null
             }).ToListAsync();
     }
 
@@ -73,6 +89,6 @@ public class IndexModel : PageModel
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
-        public string GroupName { get; set; } = string.Empty;
+        public string? GroupName { get; set; }
     }
 }

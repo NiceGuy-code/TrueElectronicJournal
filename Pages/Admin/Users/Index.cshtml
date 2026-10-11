@@ -15,6 +15,33 @@
 }
 
 <div class="card p-4">
+    <form method="get" class="d-flex gap-2 align-items-end mb-3">
+        <div>
+            <label class="form-label small mb-1">Роль</label>
+            <select asp-for="SelectedRole" class="form-select form-select-sm">
+                <option value="">Все</option>
+                @foreach (var r in Model.Roles)
+                {
+                    <option value="@r">@r</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label class="form-label small mb-1">Группа</label>
+            <select asp-for="SelectedGroupId" class="form-select form-select-sm">
+                <option value="">Все</option>
+                @foreach (var g in Model.Groups)
+                {
+                    <option value="@g.Id">@g.Name</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Применить</button>
+        @if (Model.HasFilter)
+        {
+            <a href="/Admin/Users" class="btn btn-outline-secondary btn-sm">Сбросить</a>
+        }
+    </form>
     <table class="table table-sm journal-table mb-0">
         <thead>
             <tr>
