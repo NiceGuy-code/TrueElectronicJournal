@@ -4,65 +4,113 @@
     ViewData["Title"] = "Администрирование";
 }
 
-<h3 class="m-0 mb-3">Администрирование</h3>
+<div class="journal-head">
+    <div>
+        <span class="journal-eyebrow">Панель управления</span>
+        <h3>Администрирование</h3>
+    </div>
+</div>
 
-<div class="row row-cols-2 row-cols-md-4 g-3 mb-3">
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4 journal-stagger">
     <div class="col">
-        <a asp-page="/Admin/Users/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
-            <div class="fs-2">@Model.TotalUsers</div>
-            <div class="text-muted mt-1">Пользователи</div>
+        <a asp-page="/Admin/Users/Index" class="card text-decoration-none text-dark d-block position-relative">
+            <div class="journal-stat">
+                <svg class="journal-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="journal-value">@Model.TotalUsers</div>
+                <div class="journal-stat-label">Пользователи</div>
+            </div>
         </a>
     </div>
     <div class="col">
-        <a asp-page="/Admin/Users/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
-            <div class="fs-2">@Model.Students</div>
-            <div class="text-muted mt-1">Студенты</div>
+        <a asp-page="/Admin/Users/Index" class="card text-decoration-none text-dark d-block position-relative">
+            <div class="journal-stat">
+                <svg class="journal-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="journal-value">@Model.Students</div>
+                <div class="journal-stat-label">Студенты</div>
+            </div>
         </a>
     </div>
     <div class="col">
-        <a asp-page="/Admin/Users/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
-            <div class="fs-2">@Model.Teachers</div>
-            <div class="text-muted mt-1">Учителя</div>
+        <a asp-page="/Admin/Users/Index" class="card text-decoration-none text-dark d-block position-relative">
+            <div class="journal-stat">
+                <svg class="journal-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="journal-value">@Model.Teachers</div>
+                <div class="journal-stat-label">Учителя</div>
+            </div>
         </a>
     </div>
     <div class="col">
-        <a asp-page="/Admin/Users/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
-            <div class="fs-2">@Model.Admins</div>
-            <div class="text-muted mt-1">Администраторы</div>
+        <a asp-page="/Admin/Users/Index" class="card text-decoration-none text-dark d-block position-relative">
+            <div class="journal-stat">
+                <svg class="journal-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="journal-value">@Model.Admins</div>
+                <div class="journal-stat-label">Администраторы</div>
+            </div>
         </a>
     </div>
     <div class="col">
-        <a asp-page="/Admin/Groups/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
-            <div class="fs-2">@Model.Groups</div>
-            <div class="text-muted mt-1">Группы</div>
+        <a asp-page="/Admin/Groups/Index" class="card text-decoration-none text-dark d-block position-relative">
+            <div class="journal-stat">
+                <svg class="journal-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="journal-value">@Model.Groups</div>
+                <div class="journal-stat-label">Группы</div>
+            </div>
         </a>
     </div>
     <div class="col">
-        <a asp-page="/Admin/Subjects/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
-            <div class="fs-2">@Model.Subjects</div>
-            <div class="text-muted mt-1">Предметы</div>
+        <a asp-page="/Admin/Subjects/Index" class="card text-decoration-none text-dark d-block position-relative">
+            <div class="journal-stat">
+                <svg class="journal-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="journal-value">@Model.Subjects</div>
+                <div class="journal-stat-label">Предметы</div>
+            </div>
         </a>
     </div>
     <div class="col">
-        <a asp-page="/Admin/Schedule/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
-            <div class="fs-2">@Model.Lessons</div>
-            <div class="text-muted mt-1">Занятия</div>
+        <a asp-page="/Admin/Schedule/Index" class="card text-decoration-none text-dark d-block position-relative">
+            <div class="journal-stat">
+                <svg class="journal-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="journal-value">@Model.Lessons</div>
+                <div class="journal-stat-label">Занятия</div>
+            </div>
         </a>
     </div>
     <div class="col">
-        <a asp-page="/Admin/Announcements/Index" class="card p-3 h-100 text-decoration-none text-dark d-block">
-            <div class="fs-2">@Model.Announcements</div>
-            <div class="text-muted mt-1">Объявления</div>
+        <a asp-page="/Admin/Announcements/Index" class="card text-decoration-none text-dark d-block position-relative">
+            <div class="journal-stat">
+                <svg class="journal-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 12L12 4M12 4H5.5M12 4V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="journal-value">@Model.Announcements</div>
+                <div class="journal-stat-label">Объявления</div>
+            </div>
         </a>
     </div>
 </div>
 
 <div class="row row-cols-1 row-cols-md-2 g-3">
     <div class="col">
-        <div class="card p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Последние объявления</h5>
-                <a asp-page="/Admin/Announcements/Index" class="btn-link small">Все</a>
+        <div class="card p-4 h-100 journal-in">
+            <div class="d-flex justify-content-between align-items-baseline mb-2">
+                <div>
+                    <span class="journal-eyebrow">Активность</span>
+                    <h5 class="mb-0">Последние объявления</h5>
+                </div>
+                <a asp-page="/Admin/Announcements/Index" class="small text-decoration-none">Все&nbsp;→</a>
             </div>
             @if (!Model.RecentAnnouncements.Any())
             {
@@ -70,12 +118,12 @@
             }
             else
             {
-                <ul class="list-unstyled mb-0">
+                <ul class="journal-list">
                     @foreach (var a in Model.RecentAnnouncements)
                     {
-                        <li class="mb-2">
+                        <li class="d-flex justify-content-between gap-3 align-items-baseline">
                             <div>@a.Title</div>
-                            <div class="text-muted small">@a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+                            <div class="text-muted small text-nowrap">@a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
                         </li>
                     }
                 </ul>
@@ -83,10 +131,13 @@
         </div>
     </div>
     <div class="col">
-        <div class="card p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Ближайшие занятия</h5>
-                <a asp-page="/Admin/Schedule/Index" class="btn-link small">Все</a>
+        <div class="card p-4 h-100 journal-in">
+            <div class="d-flex justify-content-between align-items-baseline mb-2">
+                <div>
+                    <span class="journal-eyebrow">Расписание</span>
+                    <h5 class="mb-0">Ближайшие занятия</h5>
+                </div>
+                <a asp-page="/Admin/Schedule/Index" class="small text-decoration-none">Все&nbsp;→</a>
             </div>
             @if (!Model.UpcomingLessons.Any())
             {
@@ -94,12 +145,14 @@
             }
             else
             {
-                <ul class="list-unstyled mb-0">
+                <ul class="journal-list">
                     @foreach (var l in Model.UpcomingLessons)
                     {
-                        <li class="mb-2">
-                            <div>@l.SubjectName — @l.GroupName</div>
-                            <div class="text-muted small">@l.DateFrom.ToString("dd.MM.yyyy HH:mm")</div>
+                        <li class="d-flex justify-content-between gap-3 align-items-baseline">
+                            <div>
+                                <div>@l.SubjectName — @l.GroupName</div>
+                            </div>
+                            <div class="text-muted small text-nowrap">@l.DateFrom.ToString("dd.MM.yyyy HH:mm")</div>
                         </li>
                     }
                 </ul>
