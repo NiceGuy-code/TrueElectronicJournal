@@ -761,6 +761,56 @@ a.card:hover .journal-arrow {
   color: rgba(255, 255, 255, 0.4);
 }
 
+/* ---------- Объявления: крупная карточка с изображением ---------- */
+
+.ann-media {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+  border-bottom: 1px solid var(--j-line);
+  border-top-left-radius: var(--j-radius);
+  border-top-right-radius: var(--j-radius);
+  background: #fafafa;
+}
+
+.ann-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .ann-media img {
+  transform: scale(1.02);
+}
+
+.ann-title {
+  font-family: "Manrope", "Inter", sans-serif;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0 0 10px;
+}
+
+.ann-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 12px;
+  color: var(--j-muted);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--j-line);
+}
+
+.ann-text {
+  white-space: pre-wrap;
+  line-height: 1.65;
+  font-size: 15px;
+}
+
 /* ---------- Оценки ---------- */
 
 .grade-5 {
