@@ -4,18 +4,26 @@
     ViewData["Title"] = "Группы";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="m-0">Группы</h3>
+<div class="journal-head">
+    <div>
+        <span class="journal-eyebrow">Справочник</span>
+        <h3>Группы</h3>
+        <div class="journal-metrics">
+            <span><b>@Model.Rows.Count</b> групп</span>
+            <span><b>@Model.Rows.Sum(r => r.StudentsCount)</b> студентов</span>
+            <span><b>@Model.Rows.Sum(r => r.LessonsCount)</b> занятий</span>
+        </div>
+    </div>
     <a asp-page="/Admin/Groups/Create" class="btn btn-primary">Создать</a>
 </div>
 
 @if (TempData["Error"] is string err)
 {
-    <div class="text-danger mb-2">@err</div>
+    <div class="text-danger mb-3">@err</div>
 }
 
-<div class="card p-4">
-    <table class="table table-sm journal-table mb-0">
+<div class="card p-4 journal-in">
+    <table class="table journal-table mb-0">
         <thead>
             <tr>
                 <th>Название</th>
@@ -35,11 +43,11 @@
         @foreach (var g in Model.Rows)
         {
             <tr>
-                <td>@g.Name</td>
+                <td class="journal-strong">@g.Name</td>
                 <td>@g.StudentsCount</td>
                 <td>@g.LessonsCount</td>
-                <td>@(g.LastLessonDate?.ToString("dd.MM.yyyy") ?? "—")</td>
-                <td class="text-end">
+                <td class="text-muted">@(g.LastLessonDate?.ToString("dd.MM.yyyy") ?? "—")</td>
+                <td class="text-end text-nowrap">
                     <a asp-page="/Admin/Groups/Edit" asp-route-id="@g.Id"
                        class="btn btn-outline-secondary btn-sm">Изменить</a>
                     <form method="post" asp-page-handler="Delete" asp-route-id="@g.Id"

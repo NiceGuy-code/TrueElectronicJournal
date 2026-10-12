@@ -69,6 +69,28 @@ h3 {
   margin-bottom: 8px;
 }
 
+/* Акцентная надпись внутри строки/ячейки */
+.journal-strong {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--j-ink);
+}
+
+/* Счётчик-метрика в шапке страницы */
+.journal-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 14px;
+  color: var(--j-muted);
+  margin-top: 8px;
+}
+
+.journal-metrics b {
+  color: var(--j-ink);
+  font-weight: 600;
+}
+
 /* Крупная цифра метрики */
 .journal-value {
   font-family: "Manrope", "Inter", sans-serif;
