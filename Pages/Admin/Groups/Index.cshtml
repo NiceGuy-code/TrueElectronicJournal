@@ -9,12 +9,19 @@
     <a asp-page="/Admin/Groups/Create" class="btn btn-primary">Создать</a>
 </div>
 
+@if (TempData["Error"] is string err)
+{
+    <div class="text-danger mb-2">@err</div>
+}
+
 <div class="card p-4">
     <table class="table table-sm journal-table mb-0">
         <thead>
             <tr>
                 <th>Название</th>
                 <th>Студентов</th>
+                <th>Занятий</th>
+                <th>Последнее занятие</th>
                 <th class="text-end">Действия</th>
             </tr>
         </thead>
@@ -22,7 +29,7 @@
         @if (Model.Rows.Count == 0)
         {
             <tr>
-                <td colspan="3" class="text-muted">Групп нет</td>
+                <td colspan="5" class="text-muted">Групп нет</td>
             </tr>
         }
         @foreach (var g in Model.Rows)
@@ -30,9 +37,16 @@
             <tr>
                 <td>@g.Name</td>
                 <td>@g.StudentsCount</td>
+                <td>@g.LessonsCount</td>
+                <td>@(g.LastLessonDate?.ToLocalTime().ToString("dd.MM.yyyy") ?? "—")</td>
                 <td class="text-end">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Изменить</button>
-                    <button type="button" class="btn btn-danger btn-sm" disabled>Удалить</button>
+                    <a asp-page="/Admin/Groups/Edit" asp-route-id="@g.Id"
+                       class="btn btn-outline-secondary btn-sm">Изменить</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@g.Id"
+                          class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Удалить группу?')">Удалить</button>
+                    </form>
                 </td>
             </tr>
         }
