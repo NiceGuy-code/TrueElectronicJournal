@@ -24,6 +24,9 @@ public class IndexModel : PageModel
     public int Lessons { get; set; }
     public int Announcements { get; set; }
 
+    public List<AnnouncementRow> RecentAnnouncements { get; set; } = new();
+    public List<LessonRow> UpcomingLessons { get; set; } = new();
+
     // Количество пользователей с ролью: один запрос с JOIN, без удалённых
     private Task<int> CountByRole(string role) =>
         (from ur in _db.UserRoles
@@ -42,5 +45,44 @@ public class IndexModel : PageModel
         Subjects = await _db.Subjects.CountAsync();
         Lessons = await _db.Lessons.CountAsync();
         Announcements = await _db.Announcements.CountAsync();
+
+        RecentAnnouncements = await _db.Announcements
+            .OrderByDescending(a => a.CreatedAt)
+            .Take(3)
+            .Select(a => new AnnouncementRow
+            {
+                Id = a.Id,
+                Title = a.Title,
+                CreatedAt = a.CreatedAt
+            })
+            .ToListAsync();
+
+        UpcomingLessons = await _db.Lessons
+            .Where(l => l.DateFrom >= DateTime.UtcNow)
+            .OrderBy(l => l.DateFrom)
+            .Take(3)
+            .Select(l => new LessonRow
+            {
+                Id = l.Id,
+                DateFrom = l.DateFrom,
+                SubjectName = l.Subject!.Name,
+                GroupName = l.Group!.Name
+            })
+            .ToListAsync();
+    }
+
+    public class AnnouncementRow
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+    }
+
+    public class LessonRow
+    {
+        public int Id { get; set; }
+        public DateTime DateFrom { get; set; }
+        public string SubjectName { get; set; } = "";
+        public string GroupName { get; set; } = "";
     }
 }
