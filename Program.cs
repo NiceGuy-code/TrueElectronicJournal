@@ -35,6 +35,13 @@ builder.Services.AddSingleton<IPasswordHasher<ApplicationUser>, PlainTextPasswor
 
 var app = builder.Build();
 
+// Создать БД и применить миграции при первом запуске (чтобы проект работал на чистой машине)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 // Роли и админ при старте
 await SeedData.InitializeAsync(app.Services);
 
