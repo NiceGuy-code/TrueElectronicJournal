@@ -1,5 +1,6 @@
 using Journal.Data;
 using Journal.Models;
+using Journal.Pages.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,7 @@ public class CalendarModel : PageModel
     }
 
     public bool NoGroup { get; set; }
-    public DateTime WeekStart { get; set; }
-    public List<DateTime> WeekDays { get; set; } = new();
-    public List<LessonRow> Lessons { get; set; } = new();
-    public DateTime Today { get; set; }
+    public WeekCalVm Cal { get; set; } = new();
 
     public async Task<IActionResult> OnGetAsync(DateTime? date)
     {
@@ -32,26 +30,30 @@ public class CalendarModel : PageModel
         if (student == null)
             return RedirectToPage("/Account/Login");
 
+        var anchor = (date ?? DateTime.Now).Date;
+
+        // Корректный понедельник: Пн=0 ... Вс=6
+        var weekStart = anchor.AddDays(-(((int)anchor.DayOfWeek + 6) % 7));
+        var weekEnd = weekStart.AddDays(7);
+
+        Cal = new WeekCalVm
+        {
+            WeekStart = weekStart,
+            Today = DateTime.Today,
+            WeekDays = Enumerable.Range(0, 7).Select(i => weekStart.AddDays(i)).ToList()
+        };
+
         if (student.GroupId == null)
         {
             NoGroup = true;
             return Page();
         }
 
-        var anchor = (date ?? DateTime.Now).Date;
-
-        // Корректный понедельник: Пн=0 ... Вс=6
-        WeekStart = anchor.AddDays(-(((int)anchor.DayOfWeek + 6) % 7));
-        var weekEnd = WeekStart.AddDays(7);
-
-        WeekDays = Enumerable.Range(0, 7).Select(i => WeekStart.AddDays(i)).ToList();
-        Today = DateTime.Today;
-
-        Lessons = await _db.Lessons
+        var lessons = await _db.Lessons
             .Where(l => l.GroupId == student.GroupId
-                && l.DateFrom >= WeekStart && l.DateFrom < weekEnd)
+                && l.DateFrom >= weekStart && l.DateFrom < weekEnd)
             .OrderBy(l => l.DateFrom)
-            .Select(l => new LessonRow
+            .Select(l => new WeekCalLesson
             {
                 Id = l.Id,
                 DateFrom = l.DateFrom,
@@ -61,15 +63,10 @@ public class CalendarModel : PageModel
             })
             .ToListAsync();
 
-        return Page();
-    }
+        foreach (var l in lessons)
+            l.Href = "/Student/Schedule";
 
-    public class LessonRow
-    {
-        public int Id { get; set; }
-        public DateTime DateFrom { get; set; }
-        public DateTime DateTo { get; set; }
-        public string SubjectName { get; set; } = "";
-        public string TeacherName { get; set; } = "";
+        Cal.Lessons = lessons;
+        return Page();
     }
 }

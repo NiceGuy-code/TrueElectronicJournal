@@ -5,35 +5,49 @@
     ViewData["Title"] = "Главная";
 }
 
-<h3 class="mb-3">Главная</h3>
+<div class="journal-head">
+    <div>
+        <span class="journal-eyebrow">Личный кабинет</span>
+        <h3>Главная</h3>
+    </div>
+</div>
 
-<div class="row row-cols-1 row-cols-md-3 g-3 mb-3">
+<div class="row row-cols-1 row-cols-md-3 g-3 mb-4 journal-stagger">
     <div class="col">
-        <div class="card p-4 h-100">
-            <div class="fs-2">@(Model.AverageGrade?.ToString("F2") ?? "—")</div>
-            <div class="text-muted small mt-1">@(Model.GradesCount > 0 ? $"{Model.GradesCount} оценок" : "оценок нет")</div>
+        <div class="card h-100">
+            <div class="journal-stat">
+                <div class="journal-value">@(Model.AverageGrade?.ToString("F2") ?? "—")</div>
+                <div class="journal-stat-label">@(Model.GradesCount > 0 ? $"{Model.GradesCount} оценок" : "оценок нет")</div>
+            </div>
         </div>
     </div>
     <div class="col">
-        <div class="card p-4 h-100">
-            <div class="fs-2">@(Model.Attendance.HasValue ? $"{Model.Attendance.Value:F0}%" : "—")</div>
-            <div class="text-muted small mt-1">@(Model.TotalLessons > 0 ? $"{Model.TotalLessons - Math.Min(Model.Absences, Model.TotalLessons)} из {Model.TotalLessons} занятий" : "занятий нет")</div>
+        <div class="card h-100">
+            <div class="journal-stat">
+                <div class="journal-value">@(Model.Attendance.HasValue ? $"{Model.Attendance.Value:F0}%" : "—")</div>
+                <div class="journal-stat-label">@(Model.TotalLessons > 0 ? $"{Model.TotalLessons - Math.Min(Model.Absences, Model.TotalLessons)} из {Model.TotalLessons} занятий" : "занятий нет")</div>
+            </div>
         </div>
     </div>
     <div class="col">
-        <div class="card p-4 h-100">
-            <div class="fs-2 text-truncate" title="@(Model.GroupName ?? "—")">@(Model.GroupName ?? "—")</div>
-            <div class="text-muted small mt-1">текущая группа</div>
+        <div class="card h-100">
+            <div class="journal-stat">
+                <div class="journal-value text-truncate" title="@(Model.GroupName ?? "—")">@(Model.GroupName ?? "—")</div>
+                <div class="journal-stat-label">текущая группа</div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row row-cols-1 row-cols-md-3 g-3">
     <div class="col">
-        <div class="card p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Последние записи</h5>
-                <a asp-page="/Student/Grades" class="text-dark text-decoration-underline small">Все</a>
+        <div class="card p-4 h-100 journal-in">
+            <div class="d-flex justify-content-between align-items-baseline mb-2">
+                <div>
+                    <span class="journal-eyebrow">Оценки</span>
+                    <h5 class="mb-0">Последние записи</h5>
+                </div>
+                <a asp-page="/Student/Grades" class="small text-decoration-none">Все&nbsp;→</a>
             </div>
             @if (!Model.RecentGrades.Any())
             {
@@ -41,10 +55,10 @@
             }
             else
             {
-                <ul class="list-unstyled mb-0">
+                <ul class="journal-list">
                     @foreach (var g in Model.RecentGrades)
                     {
-                        <li class="d-flex justify-content-between mb-2">
+                        <li class="d-flex justify-content-between align-items-baseline gap-3">
                             <div>
                                 <div>@g.SubjectName</div>
                                 <div class="text-muted small">@g.Date.ToString("dd.MM")</div>
@@ -78,10 +92,13 @@
         </div>
     </div>
     <div class="col">
-        <div class="card p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Ближайшие занятия</h5>
-                <a asp-page="/Student/Schedule" class="text-dark text-decoration-underline small">Все</a>
+        <div class="card p-4 h-100 journal-in">
+            <div class="d-flex justify-content-between align-items-baseline mb-2">
+                <div>
+                    <span class="journal-eyebrow">Расписание</span>
+                    <h5 class="mb-0">Ближайшие занятия</h5>
+                </div>
+                <a asp-page="/Student/Schedule" class="small text-decoration-none">Все&nbsp;→</a>
             </div>
             @if (!Model.UpcomingLessons.Any())
             {
@@ -89,13 +106,16 @@
             }
             else
             {
-                <ul class="list-unstyled mb-0">
+                <ul class="journal-list">
                     @foreach (var l in Model.UpcomingLessons)
                     {
-                        <li class="mb-2">
-                            <div>@l.SubjectName</div>
-                            <div class="text-muted small">
-                                @l.DateFrom.ToString("dd.MM") · @l.DateFrom.ToString("HH:mm") · @l.TeacherName
+                        <li class="d-flex justify-content-between align-items-baseline gap-3">
+                            <div>
+                                <div>@l.SubjectName</div>
+                                <div class="text-muted small">@l.TeacherName</div>
+                            </div>
+                            <div class="text-muted small text-nowrap">
+                                @l.DateFrom.ToString("dd.MM") · @l.DateFrom.ToString("HH:mm")
                             </div>
                         </li>
                     }
@@ -104,10 +124,13 @@
         </div>
     </div>
     <div class="col">
-        <div class="card p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Свежие объявления</h5>
-                <a asp-page="/Student/Announcements" class="text-dark text-decoration-underline small">Все</a>
+        <div class="card p-4 h-100 journal-in">
+            <div class="d-flex justify-content-between align-items-baseline mb-2">
+                <div>
+                    <span class="journal-eyebrow">Новости</span>
+                    <h5 class="mb-0">Свежие объявления</h5>
+                </div>
+                <a asp-page="/Student/Announcements" class="small text-decoration-none">Все&nbsp;→</a>
             </div>
             @if (!Model.RecentAnnouncements.Any())
             {
@@ -115,12 +138,12 @@
             }
             else
             {
-                <ul class="list-unstyled mb-0">
+                <ul class="journal-list">
                     @foreach (var a in Model.RecentAnnouncements)
                     {
-                        <li class="mb-2">
+                        <li class="d-flex justify-content-between align-items-baseline gap-3">
                             <div>@a.Title</div>
-                            <div class="text-muted small">@a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+                            <div class="text-muted small text-nowrap">@a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</div>
                         </li>
                     }
                 </ul>
