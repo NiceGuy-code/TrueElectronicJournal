@@ -4,8 +4,9 @@
     ViewData["Title"] = "Редактирование пользователя";
 }
 
-<div class="card p-4 mx-auto" style="max-width: 520px;">
-    <h3 class="mb-3 text-center">Редактирование пользователя</h3>
+<div class="card p-4 mx-auto journal-in" style="max-width: 520px;">
+    <span class="journal-eyebrow text-center">Аккаунты</span>
+    <h3 class="mb-4 text-center">Редактирование пользователя</h3>
     <form method="post" asp-route-id="@Model.UserId">
         <div asp-validation-summary="All" class="text-danger mb-2"></div>
         <input type="hidden" name="id" value="@Model.UserId" />
