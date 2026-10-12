@@ -4,39 +4,82 @@
     ViewData["Title"] = "Мои занятия";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="m-0">Мои занятия</h3>
-    <a asp-page="/Teacher/Calendar" class="btn btn-outline-secondary">Календарь</a>
+<div class="journal-head">
+    <div>
+        <span class="journal-eyebrow">Преподавание</span>
+        <h3>Мои занятия</h3>
+        <div class="journal-metrics">
+            @if (Model.ShowList)
+            {
+                <span><b>@Model.Items.Count</b> занятий всего</span>
+            }
+            else
+            {
+                <span><b>@Model.Cal.Lessons.Count</b> занятий на неделе</span>
+                <span>@Model.Cal.WeekStart.ToString("dd.MM.yyyy") – @Model.Cal.WeekStart.AddDays(6).ToString("dd.MM.yyyy")</span>
+            }
+        </div>
+    </div>
+    <div class="journal-switch">
+        <a asp-page="/Teacher/Index"
+           asp-route-date="@Model.Cal.WeekStart.ToString("yyyy-MM-dd")"
+           class="@(!Model.ShowList ? "is-active" : "")">Календарь</a>
+        <a asp-page="/Teacher/Index"
+           asp-route-view="list"
+           class="@(Model.ShowList ? "is-active" : "")">Список</a>
+    </div>
 </div>
 
-<div class="card p-4">
-    <table class="table table-sm journal-table mb-0">
-        <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Время</th>
-                <th>Предмет</th>
-                <th>Группа</th>
-                <th>Тема</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
-            {
+@if (!Model.ShowList)
+{
+    <div class="d-flex justify-content-end gap-2 mb-3">
+        <a asp-page="/Teacher/Index"
+           asp-route-date="@Model.Cal.WeekStart.AddDays(-7).ToString("yyyy-MM-dd")"
+           class="btn btn-outline-secondary btn-sm">← Предыдущая</a>
+        <a asp-page="/Teacher/Index"
+           asp-route-date="@DateTime.Today.ToString("yyyy-MM-dd")"
+           class="btn btn-outline-secondary btn-sm">Сегодня</a>
+        <a asp-page="/Teacher/Index"
+           asp-route-date="@Model.Cal.WeekStart.AddDays(7).ToString("yyyy-MM-dd")"
+           class="btn btn-outline-secondary btn-sm">Следующая →</a>
+    </div>
+
+    <partial name="_WeekGrid" model="Model.Cal" />
+}
+else
+{
+    <div class="card p-4 journal-in">
+        <table class="table journal-table mb-0">
+            <thead>
                 <tr>
-                    <td>@item.DateFrom.ToString("dd.MM.yyyy")</td>
-                    <td>@item.DateFrom.ToString("HH:mm") – @item.DateTo.ToString("HH:mm")</td>
-                    <td>@item.SubjectName</td>
-                    <td>@item.GroupName</td>
-                    <td>@item.Topic</td>
-                    <td><a asp-page="/Teacher/Lesson" asp-route-id="@item.Id" class="btn-link">Открыть</a></td>
+                    <th>Дата</th>
+                    <th>Время</th>
+                    <th>Предмет</th>
+                    <th>Группа</th>
+                    <th>Тема</th>
+                    <th class="text-end">Действия</th>
                 </tr>
-            }
-            @if (!Model.Items.Any())
-            {
-                <tr><td colspan="6" class="text-muted">Занятий нет</td></tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td class="text-nowrap">@item.DateFrom.ToString("dd.MM.yyyy")</td>
+                        <td class="text-nowrap">@item.DateFrom.ToString("HH:mm") – @item.DateTo.ToString("HH:mm")</td>
+                        <td class="journal-strong">@item.SubjectName</td>
+                        <td>@item.GroupName</td>
+                        <td class="text-muted">@(string.IsNullOrEmpty(item.Topic) ? "—" : item.Topic)</td>
+                        <td class="text-end">
+                            <a asp-page="/Teacher/Lesson" asp-route-id="@item.Id"
+                               class="btn btn-outline-secondary btn-sm">Открыть</a>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Items.Any())
+                {
+                    <tr><td colspan="6" class="text-muted">Занятий нет</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

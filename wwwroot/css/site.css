@@ -360,6 +360,25 @@ a.journal-card:hover,
   border-bottom: none;
 }
 
+/* Липкая первая колонка (журнал оценок) */
+.journal-freeze th:first-child,
+.journal-freeze td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--j-surface);
+  box-shadow: 1px 0 0 var(--j-line);
+}
+
+.journal-freeze thead th:first-child {
+  background: #fafafa;
+  z-index: 2;
+}
+
+.journal-freeze tbody tr:hover td:first-child {
+  background: var(--j-bg);
+}
+
 /* ---------- Списки с тонкими разделителями ---------- */
 
 .journal-list {

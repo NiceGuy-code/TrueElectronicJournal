@@ -4,27 +4,31 @@
     ViewData["Title"] = "Журнал";
 }
 
-<h3 class="mb-3">@(Model.Groups.Count == 0 ? "Журнал" : "Журнал группы: " + Model.GroupName)</h3>
+<div class="journal-head">
+    <div>
+        <span class="journal-eyebrow">Успеваемость</span>
+        <h3>@(Model.Groups.Count == 0 ? "Журнал" : "Журнал группы: " + Model.GroupName)</h3>
+    </div>
+    @if (Model.Groups.Count > 1)
+    {
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                @Model.GroupName
+            </button>
+            <ul class="dropdown-menu">
+                @foreach (var g in Model.Groups)
+                {
+                    <li><a class="dropdown-item" asp-page="/Teacher/Journal" asp-route-groupId="@g.Id">@g.Name</a></li>
+                }
+            </ul>
+        </div>
+    }
+</div>
 
 @if (Model.Groups.Count == 0)
 {
     <div class="card p-4"><div class="text-muted">У вас нет занятий</div></div>
     return;
-}
-
-@if (Model.Groups.Count > 1)
-{
-    <div class="dropdown mb-3">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            @Model.GroupName
-        </button>
-        <ul class="dropdown-menu">
-            @foreach (var g in Model.Groups)
-            {
-                <li><a class="dropdown-item" asp-page="/Teacher/Journal" asp-route-groupId="@g.Id">@g.Name</a></li>
-            }
-        </ul>
-    </div>
 }
 
 @if (Model.Students.Count == 0 || Model.Lessons.Count == 0)
@@ -35,8 +39,9 @@
     return;
 }
 
-<div class="table-responsive">
-    <table class="table table-sm journal-table">
+<div class="card journal-in">
+    <div class="table-responsive">
+        <table class="table table-sm journal-table journal-freeze mb-0">
         <thead>
             <tr>
                 <th>Студент</th>
@@ -82,4 +87,5 @@
             }
         </tbody>
     </table>
+    </div>
 </div>

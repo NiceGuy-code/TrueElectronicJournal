@@ -4,10 +4,20 @@
     ViewData["Title"] = "Занятие";
 }
 
-<h3 class="mb-3">Занятие: @Model.SubjectName — @Model.GroupName</h3>
+<div class="journal-head">
+    <div>
+        <span class="journal-eyebrow">Занятие</span>
+        <h3>@Model.SubjectName — @Model.GroupName</h3>
+        <div class="journal-metrics">
+            <span>@Model.DateFrom.ToString("dd.MM.yyyy")</span>
+            <span>@Model.DateFrom.ToString("HH:mm") – @Model.DateTo.ToString("HH:mm")</span>
+        </div>
+    </div>
+    <a asp-page="/Teacher/Index" class="btn btn-outline-secondary btn-sm">К списку занятий</a>
+</div>
 
-<div class="card p-4 mb-3">
-    <h5 class="mb-3">Информация</h5>
+<div class="card p-4 mb-3 journal-in">
+    <span class="journal-eyebrow">Информация</span>
     <div class="mb-1"><span class="text-muted">Дата:</span> @Model.DateFrom.ToString("dd.MM.yyyy")</div>
     <div class="mb-1"><span class="text-muted">Время:</span> @Model.DateFrom.ToString("HH:mm") – @Model.DateTo.ToString("HH:mm")</div>
     <div><span class="text-muted">Тема:</span> @(string.IsNullOrEmpty(Model.Topic) ? "—" : Model.Topic)</div>
