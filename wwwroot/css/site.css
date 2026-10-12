@@ -1,3 +1,22 @@
+/* =========================================================
+   Электронный журнал — дизайн-система (референс: studieau.co)
+   Серо-чёрно-белый, воздух, крупная типографика, тонкие линии
+   ========================================================= */
+
+:root {
+  --j-bg: #f5f5f5;
+  --j-surface: #ffffff;
+  --j-ink: #16181b;
+  --j-muted: #6c757d;
+  --j-line: #e5e5e6;
+  --j-line-strong: #d3d5d8;
+  --j-radius-s: 6px;
+  --j-radius: 10px;
+  --j-shadow: 0 1px 2px rgba(16, 18, 20, 0.04);
+  --j-shadow-hover: 0 8px 24px rgba(16, 18, 20, 0.08);
+  --j-t: 0.18s;
+}
+
 html {
   font-size: 14px;
 }
@@ -9,72 +28,723 @@ html {
 }
 
 body {
-  background: #f5f5f5;
-  color: #212529;
+  background: var(--j-bg);
+  color: var(--j-ink);
   margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Контент-обёртка */
+/* ---------- Типографика ---------- */
+
+h1, h2, h3 {
+  font-family: "Manrope", "Inter", -apple-system, "Segoe UI", sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--j-ink);
+}
+
+h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--j-ink);
+}
+
+h3 {
+  font-size: clamp(1.55rem, 2.6vw, 1.9rem);
+  line-height: 1.2;
+}
+
+/* Микро-лейбл над заголовком */
+.journal-eyebrow {
+  display: block;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--j-muted);
+  margin-bottom: 8px;
+}
+
+/* Крупная цифра метрики */
+.journal-value {
+  font-family: "Manrope", "Inter", sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--j-ink);
+}
+
+/* ---------- Ссылки (никакого синего) ---------- */
+
+a {
+  color: var(--j-ink);
+  text-underline-offset: 3px;
+  transition: color var(--j-t) ease, opacity var(--j-t) ease;
+}
+
+a:hover {
+  color: #000000;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--j-ink);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* ---------- Контент-обёртка ---------- */
+
 .journal-main {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 40px 20px 72px;
+  animation: journalFadeUp 0.4s ease-out both;
 }
 
-/* Навбар */
+/* ---------- Навбар ---------- */
+
 .navbar {
-  background: #fff;
+  background: var(--j-surface);
+  border-bottom: 1px solid var(--j-line);
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.navbar-brand {
+  font-family: "Manrope", "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--j-ink);
+  transition: opacity var(--j-t) ease;
+}
+
+.navbar-brand:hover {
+  opacity: 0.7;
+  color: var(--j-ink);
 }
 
 .navbar .nav-link {
-  color: #212529;
+  position: relative;
+  color: var(--j-ink);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 0;
+  margin-right: 22px;
+}
+
+.navbar .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1.5px;
+  background: var(--j-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.22s ease;
+}
+
+.navbar .nav-link:hover::after,
+.navbar .nav-link.active::after {
+  transform: scaleX(1);
 }
 
 .navbar .nav-link.active {
-  color: #212529;
-  border-bottom: 2px solid #212529;
+  color: var(--j-ink);
 }
 
-/* Карточки: без теней */
-.card {
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  box-shadow: none;
+.navbar-text {
+  color: var(--j-muted);
+  font-size: 14px;
 }
 
-/* Кнопка Primary — чёрная */
-.btn-primary {
-  --bs-btn-bg: #212529;
-  --bs-btn-border-color: #212529;
-  --bs-btn-hover-bg: #343a40;
-  --bs-btn-hover-border-color: #343a40;
-  --bs-btn-active-bg: #343a40;
-  --bs-btn-active-border-color: #343a40;
-  --bs-btn-disabled-bg: #6c757d;
-  --bs-btn-disabled-border-color: #6c757d;
-  border-radius: 4px;
+/* Кнопка «Выйти» в навбаре — как обычная ссылка */
+.navbar .btn-link {
+  color: var(--j-ink);
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 6px 0;
 }
 
-/* Фокус без синего свечения */
+.navbar .btn-link:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* ---------- Кнопки ---------- */
+
+.btn {
+  --bs-btn-focus-box-shadow: none;
+  border-radius: var(--j-radius-s);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 9px 18px;
+  transition: background-color var(--j-t) ease, color var(--j-t) ease,
+    border-color var(--j-t) ease, transform var(--j-t) ease;
+}
+
 .btn:focus,
-.btn:active:focus,
-.form-control:focus,
-.form-check-input:focus {
-  box-shadow: none;
+.btn:active:focus {
+  box-shadow: 0 0 0 3px rgba(22, 24, 27, 0.12);
 }
 
-/* Оценки */
+.btn-primary {
+  --bs-btn-bg: var(--j-ink);
+  --bs-btn-border-color: var(--j-ink);
+  --bs-btn-hover-bg: #2c3035;
+  --bs-btn-hover-border-color: #2c3035;
+  --bs-btn-active-bg: #000000;
+  --bs-btn-active-border-color: #000000;
+  --bs-btn-disabled-bg: #a9adb3;
+  --bs-btn-disabled-border-color: #a9adb3;
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--j-ink);
+  --bs-btn-border-color: var(--j-line-strong);
+  --bs-btn-hover-bg: var(--j-ink);
+  --bs-btn-hover-border-color: var(--j-ink);
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-active-bg: #000000;
+  --bs-btn-active-border-color: #000000;
+  --bs-btn-active-color: #ffffff;
+}
+
+.btn-danger {
+  --bs-btn-hover-bg: #b02a37;
+  --bs-btn-hover-border-color: #b02a37;
+  --bs-btn-active-bg: #a02431;
+  --bs-btn-active-border-color: #a02431;
+}
+
+/* btn-link — тёмный, не синий */
+.btn-link {
+  color: var(--j-ink);
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* ---------- Карточки ---------- */
+
+.card {
+  background: var(--j-surface);
+  border: 1px solid var(--j-line);
+  border-radius: var(--j-radius);
+  box-shadow: var(--j-shadow);
+  transition: transform var(--j-t) ease, box-shadow var(--j-t) ease,
+    border-color var(--j-t) ease;
+}
+
+.journal-card {
+  background: var(--j-surface);
+  border: 1px solid var(--j-line);
+  border-radius: var(--j-radius);
+  box-shadow: var(--j-shadow);
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: transform var(--j-t) ease, box-shadow var(--j-t) ease,
+    border-color var(--j-t) ease;
+}
+
+/* Подъём при наведении (для a.card, stat-карточек, журнальных карточек) */
+a.card:hover,
+a.journal-card:hover,
+.journal-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--j-shadow-hover);
+  border-color: var(--j-line-strong);
+}
+
+/* ---------- Таблицы ---------- */
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-border-color: var(--j-line);
+  margin-bottom: 0;
+}
+
+.table > :not(caption) > * > * {
+  background: transparent;
+  padding: 12px 14px;
+  border-bottom-width: 1px;
+}
+
+.table > thead > tr > th {
+  background: #fafafa;
+  color: var(--j-muted);
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--j-line);
+}
+
+.table > tbody > tr > td {
+  color: var(--j-ink);
+  vertical-align: middle;
+  transition: background-color 0.15s ease;
+}
+
+.table > tbody > tr:hover > td {
+  background: var(--j-bg);
+}
+
+.journal-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.journal-table thead th {
+  background: #fafafa;
+  color: var(--j-muted);
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--j-line);
+}
+
+.journal-table tbody td {
+  border-bottom: 1px solid var(--j-line);
+  padding: 12px 14px;
+  vertical-align: middle;
+  transition: background-color 0.15s ease;
+}
+
+.journal-table tbody tr:hover {
+  background: var(--j-bg);
+}
+
+.journal-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- Списки с тонкими разделителями ---------- */
+
+.journal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.journal-list > li {
+  padding: 12px 0;
+  border-top: 1px solid var(--j-line);
+  transition: opacity var(--j-t) ease;
+}
+
+.journal-list > li:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.journal-list > li:last-child {
+  padding-bottom: 0;
+}
+
+/* ---------- Формы ---------- */
+
+.form-control,
+.form-select {
+  border-color: var(--j-line-strong);
+  border-radius: var(--j-radius-s);
+  padding: 9px 12px;
+  font-size: 15px;
+  transition: border-color var(--j-t) ease, box-shadow var(--j-t) ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--j-ink);
+  box-shadow: 0 0 0 3px rgba(22, 24, 27, 0.08);
+}
+
+.form-control::placeholder {
+  color: #a0a4a9;
+}
+
+.form-label {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--j-ink);
+  margin-bottom: 6px;
+}
+
+.form-check-input:focus {
+  border-color: var(--j-ink);
+  box-shadow: 0 0 0 3px rgba(22, 24, 27, 0.1);
+}
+
+.form-check-input:checked {
+  background-color: var(--j-ink);
+  border-color: var(--j-ink);
+}
+
+.form-text {
+  color: var(--j-muted);
+  font-size: 13px;
+}
+
+/* ---------- Выпадающие меню ---------- */
+
+.dropdown-menu {
+  border-color: var(--j-line);
+  border-radius: var(--j-radius);
+  box-shadow: var(--j-shadow-hover);
+  padding: 6px;
+}
+
+.dropdown-item {
+  border-radius: var(--j-radius-s);
+  padding: 7px 12px;
+  font-size: 14px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dropdown-item:active {
+  background-color: var(--j-ink);
+  color: #ffffff;
+}
+
+/* ---------- Уведомления ---------- */
+
+.alert-secondary {
+  background: #f1f2f4;
+  border-color: transparent;
+  color: var(--j-ink);
+  border-radius: var(--j-radius-s);
+}
+
+/* На всякий случай — если где-то остался Bootstrap-синий */
+.text-primary {
+  color: var(--j-ink) !important;
+}
+
+.bg-primary {
+  background-color: var(--j-ink) !important;
+}
+
+/* ---------- Стат-карточка метрики ---------- */
+
+.journal-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 22px 20px;
+  height: 100%;
+}
+
+.journal-stat .journal-value {
+  transition: transform var(--j-t) ease;
+}
+
+a.card:hover .journal-value {
+  transform: translateX(3px);
+}
+
+.journal-stat-label {
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--j-muted);
+}
+
+/* Стрелка-маркер в углу карточки-ссылки */
+.journal-arrow {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  color: var(--j-muted);
+  transition: transform var(--j-t) ease, color var(--j-t) ease;
+}
+
+a.card:hover .journal-arrow {
+  transform: translate(3px, -3px);
+  color: var(--j-ink);
+}
+
+/* ---------- Заголовок страницы ---------- */
+
+.journal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.journal-head h3 {
+  margin: 0;
+}
+
+.journal-head-meta {
+  font-size: 14px;
+  color: var(--j-muted);
+  margin-top: 6px;
+}
+
+/* Переключатель вида «Календарь / Список» */
+.journal-switch {
+  display: inline-flex;
+  border: 1px solid var(--j-line-strong);
+  border-radius: var(--j-radius-s);
+  overflow: hidden;
+  background: var(--j-surface);
+}
+
+.journal-switch a {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--j-muted);
+  text-decoration: none;
+  transition: background-color var(--j-t) ease, color var(--j-t) ease;
+}
+
+.journal-switch a + a {
+  border-left: 1px solid var(--j-line);
+}
+
+.journal-switch a:hover {
+  color: var(--j-ink);
+  background: var(--j-bg);
+}
+
+.journal-switch a.is-active {
+  background: var(--j-ink);
+  color: #ffffff;
+}
+
+/* ---------- Календарь недели ---------- */
+
+.cal-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cal {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  background: var(--j-surface);
+  border: 1px solid var(--j-line);
+  border-radius: var(--j-radius);
+  box-shadow: var(--j-shadow);
+  overflow: hidden;
+}
+
+.cal-col {
+  border-left: 1px solid var(--j-line);
+  min-width: 0;
+}
+
+.cal-col:first-child {
+  border-left: none;
+}
+
+.cal-head {
+  padding: 12px 14px;
+  background: #fafafa;
+  border-bottom: 1px solid var(--j-line);
+  transition: background-color var(--j-t) ease, color var(--j-t) ease;
+}
+
+.cal-head.is-today {
+  background: var(--j-ink);
+}
+
+.cal-head.is-today .cal-day-name,
+.cal-head.is-today .cal-date {
+  color: #ffffff;
+}
+
+.cal-day-name {
+  display: block;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--j-muted);
+  margin-bottom: 2px;
+}
+
+.cal-date {
+  font-family: "Manrope", "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  color: var(--j-ink);
+  line-height: 1.1;
+}
+
+.cal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  min-height: 150px;
+}
+
+.cal-empty {
+  color: #b6b9bd;
+  font-size: 13px;
+}
+
+/* Занятие в календаре */
+.cal-lesson {
+  display: block;
+  background: var(--j-surface);
+  border: 1px solid var(--j-line);
+  border-left: 3px solid var(--j-ink);
+  border-radius: var(--j-radius-s);
+  padding: 9px 11px;
+  color: var(--j-ink);
+  text-decoration: none;
+  transition: transform var(--j-t) ease, box-shadow var(--j-t) ease,
+    border-color var(--j-t) ease;
+}
+
+.cal-lesson:hover {
+  color: var(--j-ink);
+  transform: translateY(-2px);
+  box-shadow: var(--j-shadow-hover);
+  border-color: var(--j-line-strong);
+  border-left-color: var(--j-ink);
+}
+
+.cal-time {
+  display: block;
+  font-size: 11px;
+  color: var(--j-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cal-title {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  margin: 3px 0 2px;
+  line-height: 1.3;
+}
+
+.cal-meta {
+  display: block;
+  font-size: 11px;
+  color: var(--j-muted);
+  line-height: 1.35;
+}
+
+@media (max-width: 767.98px) {
+  .cal {
+    min-width: 780px;
+  }
+}
+
+/* ---------- Герой (главная для анонимных) ---------- */
+
+.journal-hero {
+  position: relative;
+  min-height: calc(100vh - 74px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 75% 20%, #3a3d42 0%, rgba(58, 61, 66, 0) 55%),
+    linear-gradient(115deg, #101215 0%, #26292e 42%, #6b6f76 78%, #c9ccd1 100%);
+  color: #ffffff;
+}
+
+.journal-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  width: 100%;
+}
+
+.journal-hero-eyebrow {
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 22px;
+}
+
+.journal-hero-title {
+  font-family: "Manrope", "Inter", sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 22px;
+  max-width: 14ch;
+}
+
+.journal-hero-sub {
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 46ch;
+  margin: 0 0 36px;
+}
+
+.journal-hero .btn-light {
+  background: #ffffff;
+  border: 1px solid #ffffff;
+  color: var(--j-ink);
+  border-radius: var(--j-radius-s);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 13px 34px;
+}
+
+.journal-hero .btn-light:hover {
+  background: transparent;
+  color: #ffffff;
+}
+
+.journal-hero-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 26px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---------- Оценки ---------- */
+
 .grade-5 {
   font-weight: 700;
-  color: #212529;
+  color: var(--j-ink);
 }
 
 .grade-4 {
-  color: #212529;
+  color: var(--j-ink);
 }
 
 .grade-3 {
-  color: #6c757d;
+  color: var(--j-muted);
 }
 
 .grade-2 {
@@ -87,37 +757,48 @@ body {
 }
 
 .grade-absent {
-  color: #6c757d;
+  color: var(--j-muted);
   font-style: italic;
 }
 
-/* Карточка журнала */
-.journal-card {
-  background: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  box-shadow: none;
-  padding: 20px;
-  margin-bottom: 16px;
+/* ---------- Анимации ---------- */
+
+@keyframes journalFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-/* Таблица журнала */
-.journal-table {
-  width: 100%;
-  border-collapse: collapse;
+.journal-in {
+  animation: journalFadeUp 0.45s ease-out both;
 }
 
-.journal-table thead th {
-  background: #f8f9fa;
-  color: #212529;
-  font-weight: 500;
-  border-bottom: 1px solid #dee2e6;
+/* Каскадное появление элементов сетки */
+.journal-stagger > * {
+  animation: journalFadeUp 0.45s ease-out both;
 }
 
-.journal-table tbody td {
-  border-bottom: 1px solid #dee2e6;
-}
+.journal-stagger > *:nth-child(1) { animation-delay: 0.03s; }
+.journal-stagger > *:nth-child(2) { animation-delay: 0.07s; }
+.journal-stagger > *:nth-child(3) { animation-delay: 0.11s; }
+.journal-stagger > *:nth-child(4) { animation-delay: 0.15s; }
+.journal-stagger > *:nth-child(5) { animation-delay: 0.19s; }
+.journal-stagger > *:nth-child(6) { animation-delay: 0.23s; }
+.journal-stagger > *:nth-child(7) { animation-delay: 0.27s; }
+.journal-stagger > *:nth-child(8) { animation-delay: 0.31s; }
+.journal-stagger > *:nth-child(n+9) { animation-delay: 0.35s; }
 
-.journal-table tbody tr:hover {
-  background: #f5f5f5;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -11,15 +11,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Электронный журнал</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Journal.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm bg-white border-bottom">
+        <nav class="navbar navbar-expand-sm">
             <div class="container">
-                <a class="navbar-brand text-dark" asp-page="/Index">Электронный журнал</a>
+                <a class="navbar-brand" asp-page="/Index">Электронный журнал</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -31,70 +34,70 @@
                             if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Admin/Index") ? "active" : "")" asp-page="/Admin/Index">Главная</a>
+                                    <a class="nav-link @(IsActive("/Admin/Index") ? "active" : "")" asp-page="/Admin/Index">Главная</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Admin/Users") ? "active" : "")" asp-page="/Admin/Users/Index">Пользователи</a>
+                                    <a class="nav-link @(IsActive("/Admin/Users") ? "active" : "")" asp-page="/Admin/Users/Index">Пользователи</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Admin/Groups") ? "active" : "")" asp-page="/Admin/Groups/Index">Группы</a>
+                                    <a class="nav-link @(IsActive("/Admin/Groups") ? "active" : "")" asp-page="/Admin/Groups/Index">Группы</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Admin/Subjects") ? "active" : "")" asp-page="/Admin/Subjects/Index">Предметы</a>
+                                    <a class="nav-link @(IsActive("/Admin/Subjects") ? "active" : "")" asp-page="/Admin/Subjects/Index">Предметы</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Admin/Schedule") ? "active" : "")" asp-page="/Admin/Schedule/Index">Расписание</a>
+                                    <a class="nav-link @(IsActive("/Admin/Schedule") ? "active" : "")" asp-page="/Admin/Schedule/Index">Расписание</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Admin/Announcements") ? "active" : "")" asp-page="/Admin/Announcements/Index">Объявления</a>
+                                    <a class="nav-link @(IsActive("/Admin/Announcements") ? "active" : "")" asp-page="/Admin/Announcements/Index">Объявления</a>
                                 </li>
                             }
                             else if (User.IsInRole("Teacher"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Teacher/Index") ? "active" : "")" asp-page="/Teacher/Index">Мои занятия</a>
+                                    <a class="nav-link @(IsActive("/Teacher/Index") ? "active" : "")" asp-page="/Teacher/Index">Мои занятия</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Teacher/Homeworks") ? "active" : "")" asp-page="/Teacher/Homeworks/Index">Домашние задания</a>
+                                    <a class="nav-link @(IsActive("/Teacher/Homeworks") ? "active" : "")" asp-page="/Teacher/Homeworks/Index">Домашние задания</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Teacher/Journal") ? "active" : "")" asp-page="/Teacher/Journal">Журнал</a>
+                                    <a class="nav-link @(IsActive("/Teacher/Journal") ? "active" : "")" asp-page="/Teacher/Journal">Журнал</a>
                                 </li>
                             }
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Student/Index") ? "active" : "")" asp-page="/Student/Index">Главная</a>
+                                    <a class="nav-link @(IsActive("/Student/Index") ? "active" : "")" asp-page="/Student/Index">Главная</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Student/Schedule") ? "active" : "")" asp-page="/Student/Schedule">Расписание</a>
+                                    <a class="nav-link @(IsActive("/Student/Schedule") ? "active" : "")" asp-page="/Student/Schedule">Расписание</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Student/Grades") ? "active" : "")" asp-page="/Student/Grades">Оценки</a>
+                                    <a class="nav-link @(IsActive("/Student/Grades") ? "active" : "")" asp-page="/Student/Grades">Оценки</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Student/Homeworks") ? "active" : "")" asp-page="/Student/Homeworks">ДЗ</a>
+                                    <a class="nav-link @(IsActive("/Student/Homeworks") ? "active" : "")" asp-page="/Student/Homeworks">ДЗ</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Student/Announcements") ? "active" : "")" asp-page="/Student/Announcements">Объявления</a>
+                                    <a class="nav-link @(IsActive("/Student/Announcements") ? "active" : "")" asp-page="/Student/Announcements">Объявления</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark @(IsActive("/Student/Profile") ? "active" : "")" asp-page="/Student/Profile">Профиль</a>
+                                    <a class="nav-link @(IsActive("/Student/Profile") ? "active" : "")" asp-page="/Student/Profile">Профиль</a>
                                 </li>
                             }
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark @(IsActive("/Account/Login") ? "active" : "")" asp-page="/Account/Login">Войти</a>
+                                <a class="nav-link @(IsActive("/Account/Login") ? "active" : "")" asp-page="/Account/Login">Войти</a>
                             </li>
                         }
                     </ul>
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <span class="navbar-text text-dark me-3">@fullName</span>
-                        <form method="post" asp-page="/Account/Logout">
-                            <button type="submit" class="btn btn-link nav-link">Выйти</button>
+                        <span class="navbar-text me-3">@fullName</span>
+                        <form method="post" asp-page="/Account/Logout" class="d-flex align-items-center">
+                            <button type="submit" class="btn btn-link">Выйти</button>
                         </form>
                     }
                 </div>
