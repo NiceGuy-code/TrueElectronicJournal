@@ -58,7 +58,7 @@ public class IndexModel : PageModel
             .ToListAsync();
 
         UpcomingLessons = await _db.Lessons
-            .Where(l => l.DateFrom >= DateTime.UtcNow)
+            .Where(l => l.DateFrom >= DateTime.Now)
             .OrderBy(l => l.DateFrom)
             .Take(3)
             .Select(l => new LessonRow

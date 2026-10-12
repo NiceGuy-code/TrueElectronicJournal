@@ -13,11 +13,11 @@
     <h5 class="mb-3">Информация</h5>
     <dl class="row mb-0">
         <dt class="col-sm-3 text-muted">Занятие</dt>
-        <dd class="col-sm-9">@Model.Info.LessonDate.ToLocalTime().ToString("dd.MM.yyyy") — @Model.Info.SubjectName (@Model.Info.GroupName)</dd>
+        <dd class="col-sm-9">@Model.Info.LessonDate.ToString("dd.MM.yyyy") — @Model.Info.SubjectName (@Model.Info.GroupName)</dd>
         <dt class="col-sm-3 text-muted">Тема</dt>
         <dd class="col-sm-9">@Model.Info.Topic</dd>
         <dt class="col-sm-3 text-muted">Срок сдачи</dt>
-        <dd class="col-sm-9">@(Model.Info.Deadline?.ToLocalTime().ToString("dd.MM.yyyy") ?? "—")</dd>
+        <dd class="col-sm-9">@(Model.Info.Deadline?.ToString("dd.MM.yyyy") ?? "—")</dd>
         <dt class="col-sm-3 text-muted">Описание</dt>
         <dd class="col-sm-9" style="white-space: pre-wrap;">@Model.Info.Description</dd>
         @if (Model.Info.FilePath != null)

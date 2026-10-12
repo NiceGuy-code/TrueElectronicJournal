@@ -38,7 +38,7 @@
                 <td>@g.Name</td>
                 <td>@g.StudentsCount</td>
                 <td>@g.LessonsCount</td>
-                <td>@(g.LastLessonDate?.ToLocalTime().ToString("dd.MM.yyyy") ?? "—")</td>
+                <td>@(g.LastLessonDate?.ToString("dd.MM.yyyy") ?? "—")</td>
                 <td class="text-end">
                     <a asp-page="/Admin/Groups/Edit" asp-route-id="@g.Id"
                        class="btn btn-outline-secondary btn-sm">Изменить</a>

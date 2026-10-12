@@ -1,0 +1,100 @@
+@page "/Admin/Schedule/CreateRecurring"
+@model Journal.Pages.Admin.Schedule.CreateRecurringModel
+@{
+    ViewData["Title"] = "Создать занятия на период";
+}
+
+<h3 class="mb-3">Создание занятий на период</h3>
+
+<div class="card p-4 mx-auto" style="max-width: 640px;">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+        <div class="mb-3">
+            <label asp-for="Input.SubjectId" class="form-label">Предмет</label>
+            <select asp-for="Input.SubjectId" asp-items="Model.SubjectItems" class="form-select">
+                <option value="">— выберите —</option>
+            </select>
+            <span asp-validation-for="Input.SubjectId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.GroupId" class="form-label">Группа</label>
+            <select asp-for="Input.GroupId" asp-items="Model.GroupItems" class="form-select">
+                <option value="">— выберите —</option>
+            </select>
+            <span asp-validation-for="Input.GroupId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.TeacherId" class="form-label">Учитель</label>
+            <select asp-for="Input.TeacherId" asp-items="Model.TeacherItems" class="form-select">
+                <option value="">— выберите —</option>
+            </select>
+            <span asp-validation-for="Input.TeacherId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Topic" class="form-label">Тема</label>
+            <input asp-for="Input.Topic" class="form-control" />
+            <span asp-validation-for="Input.Topic" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Дни недели</label>
+            <div class="d-flex gap-3 flex-wrap">
+                @{ var days = new[] {
+                    new { N = 1, L = "Пн" }, new { N = 2, L = "Вт" },
+                    new { N = 3, L = "Ср" }, new { N = 4, L = "Чт" },
+                    new { N = 5, L = "Пт" }, new { N = 6, L = "Сб" },
+                    new { N = 7, L = "Вс" } }; }
+                @foreach (var day in days)
+                {
+                    <div class="form-check">
+                        <input type="checkbox" name="Input.DaysOfWeek" value="@day.N"
+                               class="form-check-input" id="d@(day.N)"
+                               @(Model.Input.DaysOfWeek.Contains(day.N) ? "checked" : "") />
+                        <label class="form-check-label" for="d@(day.N)">@day.L</label>
+                    </div>
+                }
+            </div>
+            <span asp-validation-for="Input.DaysOfWeek" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Время</label>
+            <div class="d-flex gap-2 align-items-center">
+                <input asp-for="Input.TimeFrom" type="time" class="form-control" />
+                <span>–</span>
+                <input asp-for="Input.TimeTo" type="time" class="form-control" />
+            </div>
+            <span asp-validation-for="Input.TimeFrom" class="text-danger"></span>
+            <span asp-validation-for="Input.TimeTo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Даты</label>
+            <div class="d-flex gap-2 align-items-center">
+                <div>
+                    <div class="form-text">С</div>
+                    <input asp-for="Input.DateFrom" type="date" class="form-control" />
+                </div>
+                <div>
+                    <div class="form-text">По</div>
+                    <input asp-for="Input.DateTo" type="date" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="Input.DateFrom" class="text-danger"></span>
+            <span asp-validation-for="Input.DateTo" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Создать занятия</button>
+            <a asp-page="/Admin/Schedule/Index" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

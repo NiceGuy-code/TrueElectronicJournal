@@ -33,7 +33,7 @@
                 @foreach (var item in Model.Items)
                 {
                     <tr>
-                        <td>@item.Date.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td>@item.Date.ToString("dd.MM.yyyy")</td>
                         <td>@item.SubjectName</td>
                         <td>@item.Topic</td>
                         <td>

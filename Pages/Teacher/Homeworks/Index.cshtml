@@ -52,14 +52,14 @@
                 foreach (var item in Model.Items)
                 {
                     <tr>
-                        <td>@item.LessonDate.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td>@item.LessonDate.ToString("dd.MM.yyyy")</td>
                         <td>@item.SubjectName</td>
                         <td>
                             @item.Description
                             <div class="text-muted small">@item.LessonTopic</div>
                         </td>
                         <td>@item.SubmittedCount/@item.TotalStudents</td>
-                        <td>@(item.Deadline?.ToLocalTime().ToString("dd.MM.yyyy") ?? "—")</td>
+                        <td>@(item.Deadline?.ToString("dd.MM.yyyy") ?? "—")</td>
                         <td>
                             <a asp-page="/Teacher/Homeworks/Details" asp-route-id="@item.Id" class="btn-link">Открыть</a>
                         </td>

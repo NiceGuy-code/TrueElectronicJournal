@@ -43,7 +43,7 @@
                 @foreach (var l in Model.Lessons)
                 {
                     <th>
-                        <a asp-page="/Teacher/Lesson" asp-route-id="@l.Id" class="btn-link" title="@l.Topic">@l.DateFrom.ToLocalTime().ToString("dd.MM")</a>
+                        <a asp-page="/Teacher/Lesson" asp-route-id="@l.Id" class="btn-link" title="@l.Topic">@l.DateFrom.ToString("dd.MM")</a>
                     </th>
                 }
             </tr>

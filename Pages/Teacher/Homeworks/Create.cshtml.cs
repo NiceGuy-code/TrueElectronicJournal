@@ -99,7 +99,7 @@ public class CreateModel : PageModel
             .ToListAsync();
 
         LessonItems = data.Select(x => new SelectListItem(
-            $"[{x.GroupName}] {x.DateFrom.ToLocalTime():dd.MM.yyyy} — {x.SubjectName}",
+            $"[{x.GroupName}] {x.DateFrom:dd.MM.yyyy} — {x.SubjectName}",
             x.Id.ToString()
         )).ToList();
     }
