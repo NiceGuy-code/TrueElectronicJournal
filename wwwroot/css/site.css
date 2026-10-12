@@ -106,6 +106,13 @@ a:hover {
   animation: journalFadeUp 0.4s ease-out both;
 }
 
+/* Герой занимает экран целиком — без отступов обёртки */
+.journal-main:has(.journal-hero) {
+  max-width: none;
+  padding: 0;
+  animation: none;
+}
+
 /* ---------- Навбар ---------- */
 
 .navbar {

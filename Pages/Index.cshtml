@@ -1,2 +1,19 @@
 ﻿@page "/"
-@* Заглушка: серверный редирект по роли, разметка не рендерится *@
+@model Journal.Pages.IndexModel
+@{
+    ViewData["Title"] = "Электронный журнал";
+}
+
+@* Заглушка героя: чёрно-белый градиент, позже — реальное изображение *@
+<section class="journal-hero">
+    <div class="journal-hero-inner">
+        <div class="journal-hero-eyebrow">Учебный процесс · онлайн</div>
+        <h1 class="journal-hero-title">Электронный журнал</h1>
+        <p class="journal-hero-sub">
+            Посещаемость, оценки, домашние задания и расписание —
+            в одном спокойном и минималистичном интерфейсе.
+        </p>
+        <a asp-page="/Account/Login" class="btn btn-light">Войти</a>
+    </div>
+    <div class="journal-hero-foot">Студенты · Преподаватели · Администрация</div>
+</section>
