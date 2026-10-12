@@ -4,12 +4,33 @@
     ViewData["Title"] = "Расписание";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="m-0">Расписание</h3>
-    <div class="d-flex gap-2">
-        <a asp-page="/Admin/Schedule/Calendar" class="btn btn-outline-secondary">Календарь</a>
-        <a asp-page="/Admin/Schedule/CreateRecurring" class="btn btn-outline-secondary">Создать на период</a>
-        <a asp-page="/Admin/Schedule/Create" class="btn btn-primary">Создать</a>
+<div class="journal-head">
+    <div>
+        <span class="journal-eyebrow">Учебный процесс</span>
+        <h3>Расписание</h3>
+        <div class="journal-metrics">
+            @if (Model.ShowList)
+            {
+                <span><b>@Model.Items.Count</b> занятий всего</span>
+            }
+            else
+            {
+                <span><b>@Model.Cal.Lessons.Count</b> занятий на неделе</span>
+                <span>@Model.Cal.WeekStart.ToString("dd.MM.yyyy") – @Model.Cal.WeekStart.AddDays(6).ToString("dd.MM.yyyy")</span>
+            }
+        </div>
+    </div>
+    <div class="d-flex gap-2 align-items-center flex-wrap">
+        <div class="journal-switch">
+            <a asp-page="/Admin/Schedule/Index"
+               asp-route-date="@Model.Cal.WeekStart.ToString("yyyy-MM-dd")"
+               class="@(!Model.ShowList ? "is-active" : "")">Календарь</a>
+            <a asp-page="/Admin/Schedule/Index"
+               asp-route-view="list"
+               class="@(Model.ShowList ? "is-active" : "")">Список</a>
+        </div>
+        <a asp-page="/Admin/Schedule/CreateRecurring" class="btn btn-outline-secondary btn-sm">На период</a>
+        <a asp-page="/Admin/Schedule/Create" class="btn btn-primary btn-sm">Создать</a>
     </div>
 </div>
 
@@ -19,49 +40,68 @@
 }
 @if (TempData["Error"] is string err)
 {
-    <div class="text-danger mb-2">@err</div>
+    <div class="text-danger mb-3">@err</div>
 }
 
-<div class="card p-4">
-    <table class="table table-sm journal-table mb-0">
-        <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Время</th>
-                <th>Предмет</th>
-                <th>Группа</th>
-                <th>Учитель</th>
-                <th>Тема</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-        @if (Model.Items.Count == 0)
-        {
-            <tr>
-                <td colspan="7" class="text-muted">Занятий нет</td>
-            </tr>
-        }
-        @foreach (var l in Model.Items)
-        {
-            <tr>
-                <td>@l.DateFrom.ToString("dd.MM.yyyy")</td>
-                <td>@l.DateFrom.ToString("HH:mm") – @l.DateTo.ToString("HH:mm")</td>
-                <td>@l.SubjectName</td>
-                <td>@l.GroupName</td>
-                <td>@l.TeacherName</td>
-                <td>@(string.IsNullOrEmpty(l.Topic) ? "—" : l.Topic)</td>
-                <td>
-                    <a asp-page="/Admin/Schedule/Edit" asp-route-id="@l.Id"
-                       class="btn btn-outline-secondary btn-sm">Изменить</a>
-                    <form method="post" asp-page-handler="Delete" asp-route-id="@l.Id"
-                          class="d-inline">
-                        <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Удалить занятие?')">Удалить</button>
-                    </form>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-</div>
+@if (!Model.ShowList)
+{
+    <div class="d-flex justify-content-end gap-2 mb-3">
+        <a asp-page="/Admin/Schedule/Index"
+           asp-route-date="@Model.Cal.WeekStart.AddDays(-7).ToString("yyyy-MM-dd")"
+           class="btn btn-outline-secondary btn-sm">← Предыдущая</a>
+        <a asp-page="/Admin/Schedule/Index"
+           asp-route-date="@DateTime.Today.ToString("yyyy-MM-dd")"
+           class="btn btn-outline-secondary btn-sm">Сегодня</a>
+        <a asp-page="/Admin/Schedule/Index"
+           asp-route-date="@Model.Cal.WeekStart.AddDays(7).ToString("yyyy-MM-dd")"
+           class="btn btn-outline-secondary btn-sm">Следующая →</a>
+    </div>
+
+    <partial name="_WeekGrid" model="Model.Cal" />
+}
+else
+{
+    <div class="card p-4 journal-in">
+        <table class="table journal-table mb-0">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Время</th>
+                    <th>Предмет</th>
+                    <th>Группа</th>
+                    <th>Учитель</th>
+                    <th>Тема</th>
+                    <th class="text-end">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (Model.Items.Count == 0)
+            {
+                <tr>
+                    <td colspan="7" class="text-muted">Занятий нет</td>
+                </tr>
+            }
+            @foreach (var l in Model.Items)
+            {
+                <tr>
+                    <td class="text-nowrap">@l.DateFrom.ToString("dd.MM.yyyy")</td>
+                    <td class="text-nowrap">@l.DateFrom.ToString("HH:mm") – @l.DateTo.ToString("HH:mm")</td>
+                    <td class="journal-strong">@l.SubjectName</td>
+                    <td>@l.GroupName</td>
+                    <td>@l.TeacherName</td>
+                    <td class="text-muted">@(string.IsNullOrEmpty(l.Topic) ? "—" : l.Topic)</td>
+                    <td class="text-end text-nowrap">
+                        <a asp-page="/Admin/Schedule/Edit" asp-route-id="@l.Id"
+                           class="btn btn-outline-secondary btn-sm">Изменить</a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@l.Id"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Удалить занятие?')">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

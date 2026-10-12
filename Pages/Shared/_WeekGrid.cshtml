@@ -1,0 +1,37 @@
+@model Journal.Pages.Shared.WeekCalVm
+@{
+    var dayNames = new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" };
+}
+<div class="cal-scroll">
+    <div class="cal journal-in">
+        @for (var i = 0; i < Model.WeekDays.Count; i++)
+        {
+            var day = Model.WeekDays[i];
+            var isToday = day.Date == Model.Today;
+            var dayLessons = Model.Lessons.Where(l => l.DateFrom.Date == day.Date).ToList();
+            <div class="cal-col">
+                <div class="cal-head @(isToday ? "is-today" : "")">
+                    <span class="cal-day-name">@dayNames[i]</span>
+                    <span class="cal-date">@day.ToString("dd.MM")</span>
+                </div>
+                <div class="cal-body">
+                    @if (dayLessons.Count == 0)
+                    {
+                        <span class="cal-empty">—</span>
+                    }
+                    else
+                    {
+                        @foreach (var l in dayLessons)
+                        {
+                            <a class="cal-lesson" href="@l.Href">
+                                <span class="cal-time">@l.DateFrom.ToString("HH:mm") – @l.DateTo.ToString("HH:mm")</span>
+                                <span class="cal-title">@l.SubjectName</span>
+                                <span class="cal-meta">@l.GroupName · @l.TeacherName</span>
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

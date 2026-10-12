@@ -4,57 +4,34 @@
     ViewData["Title"] = "Календарь";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="m-0">Календарь</h3>
-    <div class="d-flex gap-2">
-        <a asp-page="/Admin/Schedule/Calendar"
-           asp-route-date="@Model.WeekStart.AddDays(-7).ToString("yyyy-MM-dd")"
-           class="btn btn-outline-secondary btn-sm">← Предыдущая</a>
-        <a asp-page="/Admin/Schedule/Calendar"
-           asp-route-date="@Model.Today.ToString("yyyy-MM-dd")"
-           class="btn btn-outline-secondary btn-sm">Сегодня</a>
-        <a asp-page="/Admin/Schedule/Calendar"
-           asp-route-date="@Model.WeekStart.AddDays(7).ToString("yyyy-MM-dd")"
-           class="btn btn-outline-secondary btn-sm">Следующая →</a>
+<div class="journal-head">
+    <div>
+        <span class="journal-eyebrow">Учебный процесс</span>
+        <h3>Календарь</h3>
+        <div class="journal-metrics">
+            <span><b>@Model.Cal.Lessons.Count</b> занятий на неделе</span>
+            <span>@Model.Cal.WeekStart.ToString("dd.MM.yyyy") – @Model.Cal.WeekStart.AddDays(6).ToString("dd.MM.yyyy")</span>
+        </div>
+    </div>
+    <div class="d-flex gap-2 align-items-center flex-wrap">
+        <div class="journal-switch">
+            <a asp-page="/Admin/Schedule/Index" class="is-active">Календарь</a>
+            <a asp-page="/Admin/Schedule/Index" asp-route-view="list">Список</a>
+        </div>
+        <a asp-page="/Admin/Schedule/Create" class="btn btn-primary btn-sm">Создать</a>
     </div>
 </div>
 
-<div class="text-muted small mb-3">
-    @Model.WeekStart.ToString("dd.MM.yyyy") – @Model.WeekStart.AddDays(6).ToString("dd.MM.yyyy")
+<div class="d-flex justify-content-end gap-2 mb-3">
+    <a asp-page="/Admin/Schedule/Calendar"
+       asp-route-date="@Model.Cal.WeekStart.AddDays(-7).ToString("yyyy-MM-dd")"
+       class="btn btn-outline-secondary btn-sm">← Предыдущая</a>
+    <a asp-page="/Admin/Schedule/Calendar"
+       asp-route-date="@DateTime.Today.ToString("yyyy-MM-dd")"
+       class="btn btn-outline-secondary btn-sm">Сегодня</a>
+    <a asp-page="/Admin/Schedule/Calendar"
+       asp-route-date="@Model.Cal.WeekStart.AddDays(7).ToString("yyyy-MM-dd")"
+       class="btn btn-outline-secondary btn-sm">Следующая →</a>
 </div>
 
-@{
-    var dayNames = new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" };
-}
-
-<div class="row row-cols-7 g-2">
-    @for (var i = 0; i < Model.WeekDays.Count; i++)
-    {
-        var day = Model.WeekDays[i];
-        var isToday = day.Date == Model.Today;
-        var dayLessons = Model.Lessons.Where(l => l.DateFrom.Date == day.Date).ToList();
-        <div class="col">
-            <div class="card p-2 @(isToday ? "border border-dark" : "")">
-                <div class="text-muted small mb-2">@dayNames[i] @day.ToString("dd.MM")</div>
-                @if (!dayLessons.Any())
-                {
-                    <div class="text-muted small fst-italic">—</div>
-                }
-                else
-                {
-                    @foreach (var l in dayLessons)
-                    {
-                        <a asp-page="/Admin/Schedule/Edit" asp-route-id="@l.Id"
-                           class="text-decoration-none text-dark">
-                            <div class="card p-2 mb-1 bg-light">
-                                <div class="small">@l.DateFrom.ToString("HH:mm") – @l.DateTo.ToString("HH:mm")</div>
-                                <div>@l.SubjectName</div>
-                                <div class="text-muted small">@l.GroupName · @l.TeacherName</div>
-                            </div>
-                        </a>
-                    }
-                }
-            </div>
-        </div>
-    }
-</div>
+<partial name="_WeekGrid" model="Model.Cal" />
