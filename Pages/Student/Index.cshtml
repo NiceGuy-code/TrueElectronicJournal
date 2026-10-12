@@ -1,4 +1,5 @@
 @page "/Student/Index"
+@using Journal.Models
 @model Journal.Pages.Student.IndexModel
 @{
     ViewData["Title"] = "Главная";
@@ -6,7 +7,7 @@
 
 <h3 class="mb-3">Главная</h3>
 
-<div class="row row-cols-1 row-cols-md-3 g-3">
+<div class="row row-cols-1 row-cols-md-3 g-3 mb-3">
     <div class="col">
         <div class="card p-4 h-100">
             <div class="fs-2">@(Model.AverageGrade?.ToString("F2") ?? "—")</div>
@@ -23,6 +24,107 @@
         <div class="card p-4 h-100">
             <div class="fs-2 text-truncate" title="@(Model.GroupName ?? "—")">@(Model.GroupName ?? "—")</div>
             <div class="text-muted small mt-1">текущая группа</div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-3">
+    <div class="col">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Последние записи</h5>
+                <a asp-page="/Student/Grades" class="text-dark text-decoration-underline small">Все</a>
+            </div>
+            @if (!Model.RecentGrades.Any())
+            {
+                <div class="text-muted">Нет данных</div>
+            }
+            else
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var g in Model.RecentGrades)
+                    {
+                        <li class="d-flex justify-content-between mb-2">
+                            <div>
+                                <div>@g.SubjectName</div>
+                                <div class="text-muted small">@g.Date.ToString("dd.MM")</div>
+                            </div>
+                            <div>
+                                @if (g.Value != null)
+                                {
+                                    <span class="grade-@g.Value">@g.Value</span>
+                                }
+                                else if (g.Type == GradeType.NA)
+                                {
+                                    <span class="grade-na">н/б</span>
+                                }
+                                else if (g.Attendance == AttendanceType.Unexcused)
+                                {
+                                    <span class="grade-na">Н</span>
+                                }
+                                else if (g.Attendance == AttendanceType.Excused)
+                                {
+                                    <span class="grade-absent">УП</span>
+                                }
+                                else if (g.Attendance == AttendanceType.Late)
+                                {
+                                    <span class="text-muted">ОП</span>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+    <div class="col">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Ближайшие занятия</h5>
+                <a asp-page="/Student/Schedule" class="text-dark text-decoration-underline small">Все</a>
+            </div>
+            @if (!Model.UpcomingLessons.Any())
+            {
+                <div class="text-muted">Нет данных</div>
+            }
+            else
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var l in Model.UpcomingLessons)
+                    {
+                        <li class="mb-2">
+                            <div>@l.SubjectName</div>
+                            <div class="text-muted small">
+                                @l.DateFrom.ToString("dd.MM") · @l.DateFrom.ToString("HH:mm") · @l.TeacherName
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+    <div class="col">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Свежие объявления</h5>
+                <a asp-page="/Student/Announcements" class="text-dark text-decoration-underline small">Все</a>
+            </div>
+            @if (!Model.RecentAnnouncements.Any())
+            {
+                <div class="text-muted">Нет данных</div>
+            }
+            else
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var a in Model.RecentAnnouncements)
+                    {
+                        <li class="mb-2">
+                            <div>@a.Title</div>
+                            <div class="text-muted small">@a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+                        </li>
+                    }
+                </ul>
+            }
         </div>
     </div>
 </div>

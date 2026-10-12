@@ -7,6 +7,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="m-0">Расписание</h3>
     <div class="d-flex gap-2">
+        <a asp-page="/Admin/Schedule/Calendar" class="btn btn-outline-secondary">Календарь</a>
         <a asp-page="/Admin/Schedule/CreateRecurring" class="btn btn-outline-secondary">Создать на период</a>
         <a asp-page="/Admin/Schedule/Create" class="btn btn-primary">Создать</a>
     </div>
@@ -31,13 +32,14 @@
                 <th>Группа</th>
                 <th>Учитель</th>
                 <th>Тема</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
         @if (Model.Items.Count == 0)
         {
             <tr>
-                <td colspan="6" class="text-muted">Занятий нет</td>
+                <td colspan="7" class="text-muted">Занятий нет</td>
             </tr>
         }
         @foreach (var l in Model.Items)
@@ -49,6 +51,15 @@
                 <td>@l.GroupName</td>
                 <td>@l.TeacherName</td>
                 <td>@(string.IsNullOrEmpty(l.Topic) ? "—" : l.Topic)</td>
+                <td>
+                    <a asp-page="/Admin/Schedule/Edit" asp-route-id="@l.Id"
+                       class="btn btn-outline-secondary btn-sm">Изменить</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@l.Id"
+                          class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Удалить занятие?')">Удалить</button>
+                    </form>
+                </td>
             </tr>
         }
         </tbody>

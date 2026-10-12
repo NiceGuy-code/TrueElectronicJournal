@@ -15,11 +15,13 @@ public class CreateModel : PageModel
 {
     private readonly AppDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IWebHostEnvironment _env;
 
-    public CreateModel(AppDbContext db, UserManager<ApplicationUser> userManager)
+    public CreateModel(AppDbContext db, UserManager<ApplicationUser> userManager, IWebHostEnvironment env)
     {
         _db = db;
         _userManager = userManager;
+        _env = env;
     }
 
     [BindProperty]
@@ -44,13 +46,30 @@ public class CreateModel : PageModel
         if (admin == null)
             return Redirect("/Account/Login");
 
+        // Картинка необязательная: guid + расширение, путь относительный
+        string? imagePath = null;
+        if (Input.Image != null && Input.Image.Length > 0)
+        {
+            var ext = Path.GetExtension(Input.Image.FileName);
+            var name = Guid.NewGuid().ToString() + ext;
+            var dir = Path.Combine(_env.WebRootPath, "uploads", "announcements");
+            Directory.CreateDirectory(dir);
+            var fullPath = Path.Combine(dir, name);
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await Input.Image.CopyToAsync(stream);
+            }
+            imagePath = "/uploads/announcements/" + name;
+        }
+
         var ann = new Announcement
         {
             Title = Input.Title.Trim(),
             Text = Input.Text.Trim(),
             CreatedAt = DateTime.UtcNow,
             AuthorId = admin.Id,
-            GroupId = Input.GroupId
+            GroupId = Input.GroupId,
+            ImagePath = imagePath
         };
 
         _db.Announcements.Add(ann);
@@ -79,5 +98,7 @@ public class CreateModel : PageModel
         public string Text { get; set; } = string.Empty;
 
         public int? GroupId { get; set; }
+
+        public IFormFile? Image { get; set; }
     }
 }

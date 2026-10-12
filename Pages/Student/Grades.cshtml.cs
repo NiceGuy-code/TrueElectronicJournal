@@ -20,8 +20,18 @@ public class GradesModel : PageModel
         _userManager = userManager;
     }
 
-    public List<Row> Items { get; set; } = new();
     public bool NoGroup { get; set; } = false;
+
+    [BindProperty(SupportsGet = true)]
+    public string? Subject { get; set; }
+
+    public List<SubjectSummary> Summary { get; set; } = new();
+    public int OverallCount { get; set; }
+    public double? OverallAverage { get; set; }
+
+    public List<SubjectGradeRow> SubjectGrades { get; set; } = new();
+    public int SubjectCount { get; set; }
+    public double? SubjectAverage { get; set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -35,55 +45,70 @@ public class GradesModel : PageModel
             return Page();
         }
 
-        var lessons = await _db.Lessons
-            .Where(l => l.GroupId == student.GroupId)
-            .OrderByDescending(l => l.DateFrom)
-            .Select(l => new { l.Id, l.DateFrom, l.Topic, SubjectName = l.Subject!.Name })
+        // Сводка: только числовые оценки (н/б имеет Value = null и не входит)
+        var grouped = await _db.Grades
+            .Where(g => g.StudentId == student.Id && g.Value != null)
+            .GroupBy(g => g.Lesson!.Subject!.Name)
+            .Select(grp => new SubjectSummary
+            {
+                SubjectName = grp.Key,
+                Count = grp.Count(),
+                Sum = grp.Sum(x => x.Value!.Value)
+            })
             .ToListAsync();
-        var lessonIds = lessons.Select(l => l.Id).ToList();
 
-        var grades = await _db.Grades
-            .Where(g => g.StudentId == student.Id
-                && lessonIds.Contains(g.LessonId)
-                && g.Type != GradeType.Homework)
+        OverallCount = grouped.Sum(s => s.Count);
+        OverallAverage = OverallCount > 0
+            ? grouped.Sum(s => (double)s.Sum) / OverallCount
+            : null;
+
+        // Все предметы по алфавиту, включая те, где оценок нет (merge в памяти)
+        var subjectNames = await _db.Subjects
+            .OrderBy(s => s.Name)
+            .Select(s => s.Name)
             .ToListAsync();
+        var byName = grouped.ToDictionary(s => s.SubjectName);
+        Summary = subjectNames
+            .Select(name => byName.TryGetValue(name, out var s)
+                ? s
+                : new SubjectSummary { SubjectName = name })
+            .ToList();
 
-        var gradeValues = grades.Where(g => g.Type == GradeType.Lesson)
-            .ToDictionary(g => g.LessonId, g => g.Value);
-        var naSet = grades.Where(g => g.Type == GradeType.NA)
-            .Select(g => g.LessonId).ToHashSet();
-        var unexcusedSet = grades.Where(g => g.Type == GradeType.Lesson
-                && g.Attendance == AttendanceType.Unexcused)
-            .Select(g => g.LessonId).ToHashSet();
-        var excusedSet = grades.Where(g => g.Type == GradeType.Lesson
-                && g.Attendance == AttendanceType.Excused)
-            .Select(g => g.LessonId).ToHashSet();
-        var lateSet = grades.Where(g => g.Type == GradeType.Lesson
-                && g.Attendance == AttendanceType.Late)
-            .Select(g => g.LessonId).ToHashSet();
-
-        Items = lessons.Select(l => new Row
+        // Детальный режим: оценки одного предмета
+        if (Subject != null)
         {
-            Date = l.DateFrom,
-            SubjectName = l.SubjectName,
-            Topic = l.Topic ?? "—",
-            Grade = gradeValues.TryGetValue(l.Id, out var v) ? v : null,
-            Status = naSet.Contains(l.Id) ? "н/б"
-                   : unexcusedSet.Contains(l.Id) ? "Н"
-                   : excusedSet.Contains(l.Id) ? "УП"
-                   : lateSet.Contains(l.Id) ? "ОП"
-                   : ""
-        }).ToList();
+            SubjectGrades = await _db.Grades
+                .Where(g => g.StudentId == student.Id
+                    && g.Value != null
+                    && g.Lesson!.Subject!.Name == Subject)
+                .OrderBy(g => g.Lesson!.DateFrom)
+                .Select(g => new SubjectGradeRow
+                {
+                    Date = g.Lesson!.DateFrom,
+                    Value = g.Value!.Value
+                })
+                .ToListAsync();
+
+            SubjectCount = SubjectGrades.Count;
+            SubjectAverage = SubjectCount > 0
+                ? SubjectGrades.Sum(g => (double)g.Value) / SubjectCount
+                : null;
+        }
 
         return Page();
     }
 
-    public class Row
+    public class SubjectSummary
+    {
+        public string SubjectName { get; set; } = "";
+        public int Count { get; set; }
+        public int Sum { get; set; }
+        public double Average => Count > 0 ? (double)Sum / Count : 0;
+    }
+
+    public class SubjectGradeRow
     {
         public DateTime Date { get; set; }
-        public string SubjectName { get; set; } = string.Empty;
-        public string Topic { get; set; } = string.Empty;
-        public int? Grade { get; set; }
-        public string Status { get; set; } = string.Empty;
+        public int Value { get; set; }
     }
 }

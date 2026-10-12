@@ -4,69 +4,92 @@
     ViewData["Title"] = "Оценки";
 }
 
-<h3 class="mb-3">Оценки</h3>
-
 @if (Model.NoGroup)
 {
+    <h3 class="mb-3">Оценки</h3>
     <div class="card p-4"><div class="text-muted">Вы не привязаны к группе</div></div>
     return;
 }
 
-<div class="card p-4">
-    <table class="table table-sm journal-table mb-0">
-        <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Предмет</th>
-                <th>Тема</th>
-                <th>Оценка</th>
-                <th>Статус</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (!Model.Items.Any())
-            {
-                <tr><td colspan="5" class="text-muted">Занятий нет</td></tr>
-            }
-            else
-            {
-                @foreach (var item in Model.Items)
-                {
+@if (Model.Subject == null)
+{
+    <h3 class="mb-3">Оценки</h3>
+
+    <div class="card p-4 mb-3">
+        <div class="fs-2">@(Model.OverallAverage?.ToString("F2") ?? "—")</div>
+        <div class="text-muted small mt-1">Оценок: @Model.OverallCount</div>
+    </div>
+
+    <div class="card p-4">
+        <h5 class="mb-3">Сводка по предметам</h5>
+        @if (!Model.Summary.Any(s => s.Count > 0))
+        {
+            <div class="text-muted">Оценок нет</div>
+        }
+        else
+        {
+            <table class="table table-sm journal-table mb-0">
+                <thead>
                     <tr>
-                        <td>@item.Date.ToString("dd.MM.yyyy")</td>
-                        <td>@item.SubjectName</td>
-                        <td>@item.Topic</td>
-                        <td>
-                            @if (item.Grade != null)
-                            {
-                                <span class="grade-@item.Grade">@item.Grade</span>
-                            }
-                            else
-                            {
-                                <span class="text-muted">—</span>
-                            }
-                        </td>
-                        <td>
-                            @if (item.Status == "н/б")
-                            {
-                                <span class="grade-na">н/б</span>
-                            }
-                            else if (item.Status == "Н")
-                            {
-                                <span class="grade-na">Н</span>
-                            }
-                            else if (item.Status == "УП")
-                            {
-                                <span class="grade-absent">УП</span>
-                            }
-                            else if (item.Status == "ОП")
-                            {
-                                <span class="text-muted">ОП</span>
-                            }
-                        </td>
+                        <th>Предмет</th>
+                        <th>Оценок</th>
+                        <th>Средний балл</th>
                     </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.Summary)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-page="/Student/Grades" asp-route-subject="@s.SubjectName"
+                                   class="text-dark text-decoration-underline">@s.SubjectName</a>
+                            </td>
+                            <td>@(s.Count > 0 ? s.Count.ToString() : "—")</td>
+                            <td>@(s.Count > 0 ? s.Average.ToString("F2") : "—")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+}
+else
+{
+    <div class="mb-2">
+        <a asp-page="/Student/Grades" class="text-dark text-decoration-underline small">← Все предметы</a>
+    </div>
+    <h3 class="mb-3">@Model.Subject</h3>
+
+    <div class="card p-4 mb-3">
+        <div class="d-flex gap-5">
+            <div>
+                <div class="fs-2">@(Model.SubjectAverage?.ToString("F2") ?? "—")</div>
+                <div class="text-muted small mt-1">средний балл</div>
+            </div>
+            <div>
+                <div class="fs-2">@Model.SubjectCount</div>
+                <div class="text-muted small mt-1">оценок</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <h5 class="mb-3">Список оценок</h5>
+        @if (Model.SubjectGrades.Count == 0)
+        {
+            <div class="text-muted">Оценок нет</div>
+        }
+        else
+        {
+            <ul class="list-unstyled mb-0">
+                @foreach (var g in Model.SubjectGrades)
+                {
+                    <li class="d-flex justify-content-between mb-2">
+                        <span>@g.Date.ToString("dd.MM")</span>
+                        <span class="grade-@g.Value">@g.Value</span>
+                    </li>
                 }
-            }
-        </tbody>
-    </table>
-</div>
+            </ul>
+        }
+    </div>
+}

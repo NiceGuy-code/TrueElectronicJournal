@@ -15,16 +15,26 @@ else
     @foreach (var a in Model.Items)
     {
         <div class="card p-4 mb-3" style="max-width: 720px;">
-            <h5 class="mb-1">@a.Title</h5>
-            <div class="text-muted small mb-2">
-                @a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
-                · @(a.Author?.FullName ?? "—")
-                @if (a.GroupId != null)
+            <div class="row g-3">
+                @if (a.ImagePath != null)
                 {
-                    <text> · для @a.Group?.Name</text>
+                    <div class="col-md-3">
+                        <img src="@a.ImagePath" class="img-fluid" alt="" />
+                    </div>
                 }
+                <div class="@(a.ImagePath != null ? "col-md-9" : "col")">
+                    <h5 class="mb-1">@a.Title</h5>
+                    <div class="text-muted small mb-2">
+                        @a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                        · @(a.Author?.FullName ?? "—")
+                        @if (a.GroupId != null)
+                        {
+                            <text> · для @a.Group?.Name</text>
+                        }
+                    </div>
+                    <div style="white-space: pre-wrap;">@a.Text</div>
+                </div>
             </div>
-            <div style="white-space: pre-wrap;">@a.Text</div>
         </div>
     }
 }

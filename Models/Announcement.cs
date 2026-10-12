@@ -20,6 +20,8 @@ public class Announcement
 
     public int? GroupId { get; set; }
 
+    public string? ImagePath { get; set; }
+
     public ApplicationUser? Author { get; set; }
 
     public Group? Group { get; set; }

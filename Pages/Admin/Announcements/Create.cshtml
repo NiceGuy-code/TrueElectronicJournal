@@ -6,7 +6,7 @@
 
 <div class="card p-4 mx-auto" style="max-width: 640px;">
     <h3 class="mb-3 text-center">Новое объявление</h3>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div asp-validation-summary="All" class="text-danger mb-2"></div>
 
         <div class="mb-3">
@@ -26,6 +26,12 @@
             <select asp-for="Input.GroupId" class="form-select" asp-items="Model.GroupItems"></select>
             <span asp-validation-for="Input.GroupId" class="text-danger"></span>
             <div class="form-text">«Для всех» — без привязки к группе</div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Image" class="form-label">Картинка</label>
+            <input asp-for="Input.Image" type="file" class="form-control" />
+            <div class="form-text">Картинка (необязательно)</div>
         </div>
 
         <div class="d-flex gap-2">

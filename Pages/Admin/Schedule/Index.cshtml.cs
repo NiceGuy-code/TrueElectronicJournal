@@ -1,5 +1,6 @@
 using Journal.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,25 @@ public class IndexModel : PageModel
                 Topic = l.Topic
             })
             .ToListAsync();
+    }
+
+    // Удаление: нельзя, если по занятию есть оценки или ДЗ
+    public async Task<IActionResult> OnPostDeleteAsync(int id)
+    {
+        var lesson = await _db.Lessons.FindAsync(id);
+        if (lesson == null)
+            return Redirect("/Admin/Schedule");
+
+        if (await _db.Grades.AnyAsync(g => g.LessonId == id)
+            || await _db.Homeworks.AnyAsync(h => h.LessonId == id))
+        {
+            TempData["Error"] = "Нельзя удалить занятие: есть оценки или ДЗ";
+            return Redirect("/Admin/Schedule");
+        }
+
+        _db.Lessons.Remove(lesson);
+        await _db.SaveChangesAsync();
+        return Redirect("/Admin/Schedule");
     }
 
     public class LessonRow

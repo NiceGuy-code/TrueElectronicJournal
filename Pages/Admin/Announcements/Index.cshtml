@@ -9,34 +9,43 @@
     <a asp-page="/Admin/Announcements/Create" class="btn btn-primary">Создать</a>
 </div>
 
-<div class="card p-4">
-    <table class="table table-sm journal-table mb-0">
-        <thead>
-            <tr>
-                <th>Заголовок</th>
-                <th>Текст</th>
-                <th>Кому</th>
-                <th>Дата</th>
-                <th>Автор</th>
-            </tr>
-        </thead>
-        <tbody>
-        @if (Model.Items.Count == 0)
-        {
-            <tr>
-                <td colspan="5" class="text-muted">Объявлений нет</td>
-            </tr>
-        }
+@if (!Model.Items.Any())
+{
+    <div class="card p-4"><div class="text-muted">Объявлений нет</div></div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-lg-2 g-3">
         @foreach (var a in Model.Items)
         {
-            <tr>
-                <td>@a.Title</td>
-                <td>@(a.Text.Length > 100 ? a.Text[..100] + "…" : a.Text)</td>
-                <td>@(a.GroupId == null ? "Все" : (a.Group?.Name ?? "—"))</td>
-                <td>@a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
-                <td>@(a.Author?.FullName ?? "—")</td>
-            </tr>
+            <div class="col">
+                <div class="card p-4 h-100">
+                    <div class="row g-3">
+                        @if (a.ImagePath != null)
+                        {
+                            <div class="col-md-4">
+                                <img src="@a.ImagePath" class="img-fluid" alt="" />
+                            </div>
+                        }
+                        <div class="@(a.ImagePath != null ? "col-md-8" : "col")">
+                            <h5 class="mb-2">@a.Title</h5>
+                            <div class="text-muted small mb-2">
+                                @a.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                                · @(a.Author?.FullName ?? "—")
+                                @if (a.GroupId == null)
+                                {
+                                    <text> · Для всех</text>
+                                }
+                                else
+                                {
+                                    <text> · @a.Group?.Name</text>
+                                }
+                            </div>
+                            <div style="white-space: pre-wrap;">@a.Text</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-        </tbody>
-    </table>
-</div>
+    </div>
+}

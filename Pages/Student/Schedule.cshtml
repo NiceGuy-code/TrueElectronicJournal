@@ -4,7 +4,10 @@
     ViewData["Title"] = "Расписание";
 }
 
-<h3 class="mb-3">Расписание</h3>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Расписание</h3>
+    <a asp-page="/Student/Schedule/Calendar" class="btn btn-outline-secondary">Календарь</a>
+</div>
 
 @if (Model.NoGroup)
 {

@@ -27,6 +27,10 @@ public class IndexModel : PageModel
     public int TotalLessons { get; set; }
     public int Absences { get; set; }
 
+    public List<GradeRow> RecentGrades { get; set; } = new();
+    public List<LessonRow> UpcomingLessons { get; set; } = new();
+    public List<AnnouncementRow> RecentAnnouncements { get; set; } = new();
+
     // Средний балл (без Н/Б) и посещаемость (% занятий без прогулов)
     public async Task<IActionResult> OnGetAsync()
     {
@@ -63,6 +67,64 @@ public class IndexModel : PageModel
             ? null
             : Math.Max(0, 1.0 - ((double)Absences / TotalLessons)) * 100;
 
+        RecentGrades = await _db.Grades
+            .Where(g => g.StudentId == student.Id && g.Type != GradeType.Homework)
+            .OrderByDescending(g => g.Lesson!.DateFrom)
+            .Take(5)
+            .Select(g => new GradeRow
+            {
+                Date = g.Lesson!.DateFrom,
+                SubjectName = g.Lesson.Subject!.Name,
+                Value = g.Value,
+                Type = g.Type,
+                Attendance = g.Attendance
+            })
+            .ToListAsync();
+
+        if (student.GroupId != null)
+        {
+            UpcomingLessons = await _db.Lessons
+                .Where(l => l.GroupId == student.GroupId && l.DateFrom >= DateTime.Now)
+                .OrderBy(l => l.DateFrom)
+                .Take(3)
+                .Select(l => new LessonRow
+                {
+                    DateFrom = l.DateFrom,
+                    SubjectName = l.Subject!.Name,
+                    TeacherName = l.Teacher!.FullName
+                })
+                .ToListAsync();
+        }
+
+        RecentAnnouncements = await _db.Announcements
+            .Where(a => a.GroupId == null || a.GroupId == student.GroupId)
+            .OrderByDescending(a => a.CreatedAt)
+            .Take(3)
+            .Select(a => new AnnouncementRow { Title = a.Title, CreatedAt = a.CreatedAt })
+            .ToListAsync();
+
         return Page();
+    }
+
+    public class GradeRow
+    {
+        public DateTime Date { get; set; }
+        public string SubjectName { get; set; } = "";
+        public int? Value { get; set; }
+        public GradeType Type { get; set; }
+        public AttendanceType? Attendance { get; set; }
+    }
+
+    public class LessonRow
+    {
+        public DateTime DateFrom { get; set; }
+        public string SubjectName { get; set; } = "";
+        public string TeacherName { get; set; } = "";
+    }
+
+    public class AnnouncementRow
+    {
+        public string Title { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
     }
 }

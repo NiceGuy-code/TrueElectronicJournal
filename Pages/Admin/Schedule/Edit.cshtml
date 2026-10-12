@@ -1,0 +1,69 @@
+@page "/Admin/Schedule/Edit/{id:int}"
+@model Journal.Pages.Admin.Schedule.EditModel
+@{
+    ViewData["Title"] = "Редактирование занятия";
+}
+
+<h3 class="mb-3">Редактирование занятия</h3>
+
+<div class="card p-4 mx-auto" style="max-width: 640px;">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+        <div class="mb-3">
+            <label asp-for="Input.SubjectId" class="form-label">Предмет</label>
+            <select asp-for="Input.SubjectId" class="form-select" asp-items="Model.SubjectItems">
+                <option value="">— выберите —</option>
+            </select>
+            <span asp-validation-for="Input.SubjectId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.GroupId" class="form-label">Группа</label>
+            <select asp-for="Input.GroupId" class="form-select" asp-items="Model.GroupItems">
+                <option value="">— выберите —</option>
+            </select>
+            <span asp-validation-for="Input.GroupId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.TeacherId" class="form-label">Учитель</label>
+            <select asp-for="Input.TeacherId" class="form-select" asp-items="Model.TeacherItems">
+                <option value="">— выберите —</option>
+            </select>
+            <span asp-validation-for="Input.TeacherId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Date" class="form-label">Дата</label>
+            <input asp-for="Input.Date" type="date" class="form-control" />
+            <span asp-validation-for="Input.Date" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Время</label>
+            <div class="d-flex gap-2 align-items-center">
+                <input asp-for="Input.TimeFrom" type="time" class="form-control" />
+                <span>–</span>
+                <input asp-for="Input.TimeTo" type="time" class="form-control" />
+            </div>
+            <span asp-validation-for="Input.TimeFrom" class="text-danger"></span>
+            <span asp-validation-for="Input.TimeTo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Topic" class="form-label">Тема</label>
+            <input asp-for="Input.Topic" class="form-control" placeholder="Производные" />
+            <span asp-validation-for="Input.Topic" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-page="/Admin/Schedule/Index" class="btn btn-outline-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
