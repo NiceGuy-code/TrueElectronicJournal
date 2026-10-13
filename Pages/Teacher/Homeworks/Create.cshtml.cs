@@ -50,7 +50,8 @@ public class CreateModel : PageModel
         if (!ModelState.IsValid)
             return Page();
 
-        if (Input.Deadline.HasValue && Input.Deadline.Value.Date < DateTime.UtcNow.Date)
+        // Дедлайн приходит локальной датой (input type="date") — сравниваем с локальной датой
+        if (Input.Deadline.HasValue && Input.Deadline.Value.Date < DateTime.Today)
         {
             ModelState.AddModelError("Input.Deadline", "Срок сдачи не может быть в прошлом");
             return Page();

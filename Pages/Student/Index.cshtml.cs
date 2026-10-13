@@ -59,9 +59,11 @@ public class IndexModel : PageModel
                 && g.Type == GradeType.Lesson
                 && g.Attendance == AttendanceType.Unexcused);
 
+        // Только прошедшие занятия: будущие нельзя пропустить, ими нельзя делить
         TotalLessons = student.GroupId == null
             ? 0
-            : await _db.Lessons.CountAsync(l => l.GroupId == student.GroupId);
+            : await _db.Lessons.CountAsync(l => l.GroupId == student.GroupId
+                && l.DateFrom <= DateTime.Now);
 
         Attendance = TotalLessons == 0
             ? null

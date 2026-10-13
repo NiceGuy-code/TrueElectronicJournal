@@ -56,7 +56,7 @@
                 <span class="text-success">Сдано</span>
                 <span class="text-muted small">— @hw.MySubmittedAt.Value.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span>
             }
-            else if (hw.Deadline.HasValue && hw.Deadline.Value < DateTime.UtcNow)
+            else if (hw.Deadline.HasValue && hw.Deadline.Value.Date < DateTime.Today)
             {
                 <span class="text-danger">Просрочено</span>
             }

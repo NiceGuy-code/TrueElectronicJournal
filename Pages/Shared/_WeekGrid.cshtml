@@ -23,10 +23,16 @@
                     {
                         @foreach (var l in dayLessons)
                         {
+                            // У студента нет группы, у учителя — своего имени: собираем только непустые части
+                            var meta = string.Join(" · ", new[] { l.GroupName, l.TeacherName }
+                                .Where(m => !string.IsNullOrWhiteSpace(m)));
                             <a class="cal-lesson" href="@l.Href">
                                 <span class="cal-time">@l.DateFrom.ToString("HH:mm") – @l.DateTo.ToString("HH:mm")</span>
                                 <span class="cal-title">@l.SubjectName</span>
-                                <span class="cal-meta">@l.GroupName · @l.TeacherName</span>
+                                @if (!string.IsNullOrEmpty(meta))
+                                {
+                                    <span class="cal-meta">@meta</span>
+                                }
                             </a>
                         }
                     }
